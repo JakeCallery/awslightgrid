@@ -1,0 +1,8 @@
+Linux VM Setup by vagrant
+Python AWS IoT MQTT client running on Intel Edison
+Python interface to Arduio/Trellis Light grid
+NodeJS Socket Server Running on VM
+NodeJS Socket Server is also an MQTT client for AWS IoT
+Apache Web Server Running on VM (serves web client)
+HTML Web client, talks to socket server
+

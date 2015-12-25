@@ -1,0 +1,13 @@
+{
+	"name": "LBSocketServer",
+	"version": "0.0.1",
+	"main": "main.js",
+	"author": {
+		"name": "Jake Callery",
+		"email": "<jake@subvoicestudios.com>"
+	},
+	"description": "Web to AWS",
+	"dependencies": {
+		"websocket": "*"
+	}
+}
