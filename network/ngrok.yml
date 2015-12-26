@@ -1,7 +1,12 @@
 authtoken: 7XB5HxKpEfQpsoQc4tW4d_7UTdZBwytdH5SoyiPHVZ4
 
 tunnels:
-  lgwebclient:
+  webclient:
     proto: http
     addr: 8080
     subdomain: jac
+
+  socketclient:
+    proto: tcp
+    addr: 5252
+    remote_addr: 1.tcp.ngrok.io:20674

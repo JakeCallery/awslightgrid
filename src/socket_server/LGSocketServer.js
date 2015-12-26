@@ -7,6 +7,10 @@ module.exports = LGSocketServer;
 var Events = require('events');
 var HTTP = require('http');
 var WebSocketServer = require('websocket').server;
+var Client = require('./Client.js');
+var Message = require('./Message.js');
+
+var SERVER_ID = 0;
 
 function LGSocketServer($id){
     //Super
@@ -18,9 +22,10 @@ function LGSocketServer($id){
 
     var port = null;
     var connections = [];
-    var clients = [];
     var httpServer = null;
     var wss = null;
+
+    self.clients = [];
 
     this.start = function($port){
         port = $port;
@@ -60,19 +65,11 @@ function LGSocketServer($id){
 
             var connectionIndex = connections.push(conn) - 1;
             var client = new Client(conn, connectionIndex);
-            client.addListener('close');
+            client.addListener('close', handleConnClose);
             client.addListener('message', handleClientMessage);
-            clients.push(client);
+            self.clients.push(client);
 
-            var connectObj = {};
-            connectObj.clientId = client.id;
-            connectObj.clientType = client.type;
-            connectObj.clients = [];
-            for (var r = 0; r < clients.length; r++) {
-                connectObj.clients.push({clientId: group.clients[r].id, clientType: group.clients[r].type});
-            }
-            console.log('Connect String: ' + connectObj);
-            var msg = new Message(SERVER_ID, Message.CONNECT, connectObj);
+            var msg = new Message(SERVER_ID, Message.CONNECT);
             client.sendMessage(msg, JSON.stringify(msg));
         }
 
@@ -83,7 +80,7 @@ function LGSocketServer($id){
         var connection = $client.connection;
         console.log(new Date() + ' Peer ' + connection.remoteAddress + ' disconnected. / ' + $reasonCode + ': ' + $description);
         connections.splice($client.connectionIndex, 1);
-        var index = this.clients.indexOf($client);
+        var index = self.clients.indexOf($client);
         self.clients.splice(index,1);
         $client.removeListener('close', handleConnClose);
     };
