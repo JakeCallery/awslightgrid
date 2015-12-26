@@ -1,0 +1,7 @@
+authtoken: 7XB5HxKpEfQpsoQc4tW4d_7UTdZBwytdH5SoyiPHVZ4
+
+tunnels:
+  lgwebclient:
+    proto: http
+    addr: 8080
+    subdomain: jac
