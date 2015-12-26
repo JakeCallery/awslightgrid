@@ -1,31 +1,49 @@
 html {
 	height: 100%;
-	margin:0;
+	margin: 0;
 	padding: 0;
 }
 
 body {
-	background-color: #FFFFFF;
+	background-color: #000000;
 	height: 100%;
 	margin: 0;
 	padding: 0;
 	font-family: 'Open Sans', sans-serif;
+	color: #ffffff;
 }
 
-.statsDiv {
-	position:fixed;
-	left: auto;
-	top: 0;
-	right: 0;
+button {
+	cursor: pointer;
 }
 
-.statsDivHidden {
-	position: fixed;
-	left: 0;
-	top: 0;
-	visibility: hidden;
+.outerWrapper {
+	width: 100%;
+	margin: 0;
+	padding: 0;
 }
 
-table, th, td {
-    border: 1px solid black;
+.gridDiv {
+	width: 1000px;
+	background-color: #0f0f0f;
+	margin:0 auto;
+	padding: 0;
 }
+
+.gridButton {
+	width:100px;
+	height:100px;
+	background: #6d7076;
+	border: 0;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	border-radius: 7px;
+	float: left;
+	margin: 20px 0 0 20px;
+}
+
+.gridButton:hover {
+	background: #104aa7;
+}
+
+
