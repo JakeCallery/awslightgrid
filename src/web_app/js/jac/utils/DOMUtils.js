@@ -93,7 +93,7 @@ function(){
 		    DOMUtils.getAllChildren($rootElement, childNodes);
 		    var currentClassNames = [];
 		    for(var i = 0, l = childNodes.length; i < l; i++){
-				if(childNodes[i].hasOwnProperty('className')){
+				if(childNodes[i].hasOwnProperty('className') || 'className' in childNodes[i]){
 					var className = childNodes[i].className;
 					if(className !== undefined){
 						currentClassNames = className.split(' ');
