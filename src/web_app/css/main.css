@@ -1,49 +1,85 @@
 html {
-	height: 100%;
-	margin: 0;
-	padding: 0;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-	background-color: #000000;
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	font-family: 'Open Sans', sans-serif;
-	color: #ffffff;
+    background-color: #000000;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    color: #ffffff;
+    overflow-x: hidden;
 }
 
 button {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .outerWrapper {
-	width: 100%;
-	margin: 0;
-	padding: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .gridDiv {
-	width: 1000px;
-	background-color: #0f0f0f;
-	margin:0 auto;
-	padding: 0;
+    width: 960px;
+    margin: 0 auto;
+    padding: 0;
 }
 
 .gridButton {
-	width:100px;
-	height:100px;
-	background: #6d7076;
-	border: 0;
-	-moz-border-radius: 7px;
-	-webkit-border-radius: 7px;
-	border-radius: 7px;
-	float: left;
-	margin: 20px 0 0 20px;
+    width:100px;
+    height:100px;
+    background: #6d7076;
+    border: 0;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    border-radius: 7px;
+    float: left;
+    padding: 0;
+
 }
 
 .gridButton:hover {
-	background: #104aa7;
+    background: #104aa7;
 }
 
 
+@media only screen and (min-width: 960px){
+    [class="gridButton"]{
+        width: 100px;
+        height: 100px;
+        margin: 10px;
+    }
+
+    [class="gridDiv"]{
+        width: 960px;
+    }
+}
+
+@media only screen and (max-width: 960px){
+    [class="gridButton"]{
+        width: 75px;
+        height: 75px;
+        margin: 7px;
+    }
+
+    [class="gridDiv"]{
+        width: 720px;
+    }
+}
+
+@media only screen and (max-width: 720px){
+    [class="gridButton"]{
+        width: 45px;
+        height: 45px;
+        margin: 3px;
+    }
+
+    [class="gridDiv"]{
+        width: 440px;
+    }
+}

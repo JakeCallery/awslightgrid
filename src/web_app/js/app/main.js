@@ -14,7 +14,6 @@ define([
         return function(){
             L.addLogTarget(new ConsoleTarget());
             L.log('New Main!');
-
             var client = null;
 
             L.log('New Socket Client');
