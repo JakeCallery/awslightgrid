@@ -8,9 +8,10 @@ define([
     'jac/utils/ObjUtils',
     'jac/utils/EventUtils',
     'jac/logger/Logger',
-    'app/GridButtonEvent'
+    'app/GridButtonEvent',
+    'jac/utils/DOMUtils'
 ],
-    function (EventDispatcher, ObjUtils, EventUtils, L, GridButtonEvent) {
+    function (EventDispatcher, ObjUtils, EventUtils, L, GridButtonEvent, DOMUtils) {
         return (function () {
             /**
              * Creates a GridButton object
@@ -22,14 +23,16 @@ define([
                 EventDispatcher.call(this);
 
                 var self = this;
+
                 this.state = GridButton.OFF_STATE;
                 this.buttonEl = $buttonEl;
                 this.arrayLoc = this.getButtonArrayLoc(this.buttonEl);
                 this.col = this.arrayLoc.col;
                 this.row = this.arrayLoc.row;
-
-                this.handleClickDelegate = EventUtils.bind(self, self.handleButtonClick);
-                EventUtils.addDomListener(this.buttonEl, 'click', this.handleClickDelegate);
+                DOMUtils.addClass(this.buttonEl, 'gridButtonDisplay');
+                DOMUtils.addClass(this.buttonEl, 'deSelected');
+                self.handleClickDelegate = EventUtils.bind(self, self.handleButtonClick);
+                EventUtils.addDomListener(this.buttonEl, 'click', self.handleClickDelegate);
             }
 
             //Inherit / Extend
@@ -38,16 +41,30 @@ define([
             var p = GridButton.prototype;
 
             p.handleButtonClick = function($e){
+                var self = this;
                 L.log('Button Clicked: ' + this.col + ',' + this.row);
-                this.state = !this.state;
-                if(this.state == GridButton.ON_STATE){
-                    this.dispatchEvent(new GridButtonEvent(GridButtonEvent.ON));
-                } else {
-                    this.dispatchEvent(new GridButtonEvent(GridButtonEvent.OFF));
-                }
-
+                self.toggleState();
             };
 
+            p.setState = function($state){
+                var self = this;
+                this.state = $state;
+                L.log('' + this.state + ' / ' + this.col, this.row);
+                if(this.state == GridButton.ON_STATE){
+                    DOMUtils.addClass(self.buttonEl, 'selected');
+                    DOMUtils.removeClass(self.buttonEl, 'deSelected');
+
+                } else {
+                    DOMUtils.addClass(self.buttonEl, 'deSelected');
+                    DOMUtils.removeClass(self.buttonEl, 'selected');
+                }
+
+                self.dispatchEvent(new GridButtonEvent(this.state));
+            };
+
+            p.toggleState = function(){
+                this.setState(!this.state);
+            };
 
             p.getButtonArrayLoc = function($buttonEl){
                 var bCol = parseInt($buttonEl.id.split('_')[0]);

@@ -32,8 +32,14 @@ function(){
 	    };
 
 	    DOMUtils.removeClass = function($domEl, $className){
+			var numClasses = $domEl.className.split(' ').length;
 		    var regEx = new RegExp('(\\s|^)' + $className + '(\\s|$)');
-		    $domEl.className = $domEl.className.replace(regEx,'');
+		    if(numClasses > 0){
+				$domEl.className = $domEl.className.replace(regEx,' ');
+			} else {
+				$domEl.className = $domEl.className.replace(regEx,'');
+			}
+
 	    };
 
 	    DOMUtils.hasClass = function($domEl, $className){

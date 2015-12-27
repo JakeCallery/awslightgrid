@@ -31,9 +31,9 @@ button {
 }
 
 .gridButton {
-    width:100px;
-    height:100px;
-    background: #6d7076;
+}
+
+.gridButtonDisplay {
     border: 0;
     -moz-border-radius: 7px;
     -webkit-border-radius: 7px;
@@ -42,46 +42,54 @@ button {
     padding: 0;
 }
 
-.gridButton:hover {
-    background: #0e254a;
-}
-
-.gridButtonSelected {
-    background: #104aa7;
-}
-
-@media only screen and (min-width: 960px){
-    [class="gridButton"]{
+@media (min-width: 960px){
+    .gridButtonDisplay {
         width: 100px;
         height: 100px;
         margin: 10px;
     }
 
-    [class="gridDiv"]{
+    .gridDiv {
         width: 960px;
     }
 }
 
-@media only screen and (max-width: 960px){
-    [class="gridButton"]{
+@media (max-width: 960px){
+    .gridButtonDisplay{
         width: 75px;
         height: 75px;
         margin: 7px;
     }
 
-    [class="gridDiv"]{
+    .gridDiv {
         width: 720px;
     }
 }
 
-@media only screen and (max-width: 720px){
-    [class="gridButton"]{
+@media (max-width: 720px){
+    .gridButtonDisplay {
         width: 45px;
         height: 45px;
         margin: 3px;
     }
 
-    [class="gridDiv"]{
+    .gridDiv{
         width: 440px;
     }
+}
+
+.gridButtonDisplay.selected {
+    background: #104aa7;
+}
+
+.gridButtonDisplay.selected:hover {
+    background: #1059dd;
+}
+
+.gridButtonDisplay.deSelected {
+    background: #6d7076;
+}
+
+.gridButtonDisplay.deSelected:hover {
+    background: #0e254a;
 }

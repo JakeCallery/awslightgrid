@@ -56,9 +56,12 @@ define([
                     var buttonEl = this.buttons[i];
                     var button = new GridButton(buttonEl);
                     this.buttonGrid[button.col][button.row] = button;
-                    button.addEventListener(GridButtonEvent.ON, this.buttonOnDelegate);
-                    button.addEventListener(GridButtonEvent.OFF, this.buttonOffDelegate);
+                    button.addEventListener(GridButtonEvent.ON, self.buttonOnDelegate);
+                    button.addEventListener(GridButtonEvent.OFF, self.buttonOffDelegate);
                 }
+
+
+
 
             };
 
