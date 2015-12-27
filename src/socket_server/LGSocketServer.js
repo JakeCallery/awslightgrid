@@ -87,6 +87,7 @@ function LGSocketServer($id){
 
     var handleClientMessage = function($client, $msg){
         console.log('ClientMessage: ' + $client.id + ' / ' + $msg.data);
+        console.log($msg.data);
     };
 
     var checkOriginAllowed = function($origin){

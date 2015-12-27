@@ -58,7 +58,10 @@ define([
                     L.log('Caught message: ');
                     L.log(msg);
 
-                    self.geb.dispatchEvent(new ButtonUpdateFromSocketEvent(ButtonUpdateFromSocketEvent.UPDATE, msg));
+                    if(msg.messageType == MessageTypes.BUTTON_UPDATE){
+                        self.geb.dispatchEvent(new ButtonUpdateFromSocketEvent(ButtonUpdateFromSocketEvent.UPDATE, msg.utf8Data));
+                    }
+
 
                 };
 

@@ -26,7 +26,7 @@ function Client($connection, $globalConnectionIndex, $type) {
 	this.connection = $connection;
 	this.group = null;
 	this.connectionIndex = $globalConnectionIndex;
-	this.type = $type;
+	//this.type = $type;
 
 	var handleMessage = function($message){
 		//TODO: possible support for binary data
@@ -47,9 +47,9 @@ function Client($connection, $globalConnectionIndex, $type) {
 	//this will require updating all .sendMessage calls
 	this.sendMessage = function($msgObj, $message){
 		//console.log('---' + $msgObj + ' / ' + $message);
-		if($msgObj.type === 'utf8'){
+		if($msgObj.dataType === 'utf8'){
 			self.connection.sendUTF($message);
-		} else if($msgObj.type === 'binary'){
+		} else if($msgObj.dataType === 'binary'){
 			self.connection.sendBytes($msgObj.binaryData);
 		}
 	};
@@ -70,6 +70,8 @@ Client.prototype = Object.create(Events.EventEmitter.prototype, {
 	}
 });
 
+/*
 Client.INPUT_TYPE = 'input';
 Client.SPECTATOR_TYPE = 'spectator';
 Client.STATS_TYPE = 'stats';
+*/
