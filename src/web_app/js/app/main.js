@@ -22,6 +22,6 @@ define([
             L.log('Before Connect');
             client.connect('ws://1.tcp.ngrok.io:20674', 'lgproto');
             L.log('After Connect');
-            lgManager.initGrid();
+            lgManager.initGrid(8,8);
         }();
     });

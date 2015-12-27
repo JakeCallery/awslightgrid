@@ -40,13 +40,15 @@ button {
     border-radius: 7px;
     float: left;
     padding: 0;
-
 }
 
 .gridButton:hover {
-    background: #104aa7;
+    background: #0e254a;
 }
 
+.gridButtonSelected {
+    background: #104aa7;
+}
 
 @media only screen and (min-width: 960px){
     [class="gridButton"]{
