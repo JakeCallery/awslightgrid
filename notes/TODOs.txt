@@ -1,0 +1,22 @@
+Next up (Software):
+Send socket message on button click
+Receive socket message from server
+MQTT SDK integration with NodeJS
+Update Socket Clients when shadow changes.
+Create Standalone Edison Python code
+    - catch button presses
+    - update shadow on button presses
+    - update trellis on shadow updates
+    - notify of state "sync"
+Fix CSS media queries on mobile for web client
+Add in socket reconnect after suspend
+
+Next Up (Hardware):
+Wire test trellis to Edison
+Port Raspberry pi python to edison
+test turning on and off trellis lights
+
+IT:
+Make Vagrant setup to build and deploy socket software to linux server
+maybe even run ngrok on that server?
+

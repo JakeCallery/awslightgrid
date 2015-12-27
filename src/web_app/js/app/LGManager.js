@@ -59,10 +59,6 @@ define([
                     button.addEventListener(GridButtonEvent.ON, self.buttonOnDelegate);
                     button.addEventListener(GridButtonEvent.OFF, self.buttonOffDelegate);
                 }
-
-
-
-
             };
 
             p.handleButtonOn = function($e){
