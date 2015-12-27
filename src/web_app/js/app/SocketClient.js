@@ -61,8 +61,6 @@ define([
                     if(msg.messageType == MessageTypes.BUTTON_UPDATE){
                         self.geb.dispatchEvent(new ButtonUpdateFromSocketEvent(ButtonUpdateFromSocketEvent.UPDATE, msg.utf8Data));
                     }
-
-
                 };
 
                 this.connect = function($connectURL, $protocol){
