@@ -11,9 +11,9 @@ define(['jac/events/JacEvent', 'jac/utils/ObjUtils'],
              * @extends {JacEvent}
              * @constructor
              */
-            function GridButtonEvent($type) {
+            function GridButtonEvent($type, $data) {
                 //super
-                JacEvent.call(this, $type);
+                JacEvent.call(this, $type, $data);
             }
 
             //Inherit / Extend

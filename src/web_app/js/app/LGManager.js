@@ -9,10 +9,16 @@ define([
     'jac/logger/Logger',
     'jac/utils/DOMUtils',
     'jac/utils/EventUtils',
-    'app/GridButtonEvent',
-    'app/GridButton'
+    'app/events/GridButtonEvent',
+    'app/GridButton',
+    'jac/events/GlobalEventBus',
+    'app/events/ButtonUpdateFromUIEvent',
+    'app/events/ButtonUpdateFromSocketEvent'
+
 ],
-    function (EventDispatcher, ObjUtils, L, DOMUtils, EventUtils, GridButtonEvent, GridButton) {
+    function (EventDispatcher,ObjUtils,L,DOMUtils,
+              EventUtils,GridButtonEvent,GridButton,GEB,
+              ButtonUpdateFromUIEvent, ButtonUpdateFromSocketEvent) {
         return (function () {
             /**
              * Creates a LGManager object
@@ -25,6 +31,7 @@ define([
 
                 var self = this;
 
+                this.geb = new GEB();
                 this.window = $window;
                 this.doc = $doc;
                 this.buttons = [];
@@ -33,6 +40,8 @@ define([
 
                 this.buttonOnDelegate = EventUtils.bind(self, self.handleButtonOn);
                 this.buttonOffDelegate = EventUtils.bind(self, self.handleButtonOff);
+                this.updateFromSocketDelegate = EventUtils.bind(self, self.handleUpdateFromSocket);
+                this.geb.addEventListener(ButtonUpdateFromSocketEvent.UPDATE, this.updateFromSocketDelegate);
             }
 
             //Inherit / Extend
@@ -62,13 +71,42 @@ define([
             };
 
             p.handleButtonOn = function($e){
-                L.log('Caught Button ON: ' + $e.target.col, $e.target.row);
+                L.log('Caught Button ON: ' + $e.target.col, $e.target.row, $e.target.state);
+                this.geb.dispatchEvent(
+                    new ButtonUpdateFromUIEvent(
+                        ButtonUpdateFromUIEvent.UPDATE,
+                        {
+                            col:$e.target.col,
+                            row:$e.target.row,
+                            state:$e.target.state
+                        }
+                    )
+                );
             };
 
             p.handleButtonOff = function($e){
-                L.log('Caught Button OFF: ' + $e.target.col, $e.target.row);
+                L.log('Caught Button OFF: ' + $e.target.col, $e.target.row, $e.target.state);
+                this.geb.dispatchEvent(
+                    new ButtonUpdateFromUIEvent(
+                        ButtonUpdateFromUIEvent.UPDATE,
+                        {
+                            col:$e.target.col,
+                            row:$e.target.row,
+                            state:$e.target.state
+                        }
+                    )
+                );
             };
 
+            p.setButtonState = function($col, $row, $state){
+                L.log('Setting Button State: ' + $state);
+                this.buttonGrid[$col][$row].setState($state)
+            };
+
+            p.handleUpdateFromSocket = function($e){
+                L.log('Caught Update From Socket: ');
+                L.log($e.data);
+            };
             //Return constructor
             return LGManager;
         })();

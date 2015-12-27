@@ -10,9 +10,17 @@ define([
     'jac/events/JacEvent',
     'jac/utils/EventUtils',
     'jac/events/GlobalEventBus',
-    'json2'
+    'json2',
+    'app/SocketMessage',
+    'app/events/ButtonUpdateFromUIEvent',
+    'app/events/ButtonUpdateFromSocketEvent',
+    'app/MessageTypes'
 ],
-    function (EventDispatcher, ObjUtils, L, JacEvent, EventUtils, GEB, JSON) {
+    function (EventDispatcher, ObjUtils, L, JacEvent,
+              EventUtils, GEB, JSON, SocketMessage,
+              ButtonUpdateFromUIEvent, ButtonUpdateFromSocketEvent,
+              MessageTypes
+    ) {
         return (function () {
             /**
              * Creates a SocketClient object
@@ -24,8 +32,12 @@ define([
                 EventDispatcher.call(this);
 
                 var self = this;
-                var geb = new GEB();
-                //var connectURL = 'tcp://1.tcp.ngrok.io:20674';
+
+                this.geb = new GEB();
+                this.socket = null;
+
+                this.handleButtonUpdateFromUIDelegate = EventUtils.bind(self, self.handleButtonUpdateFromUI);
+                this.geb.addEventListener(ButtonUpdateFromUIEvent.UPDATE, self.handleButtonUpdateFromUIDelegate);
 
                 var handleSocketOpen = function($e){
                     L.log('Connected...');
@@ -46,20 +58,50 @@ define([
                     L.log('Caught message: ');
                     L.log(msg);
 
+                    self.geb.dispatchEvent(new ButtonUpdateFromSocketEvent(ButtonUpdateFromSocketEvent.UPDATE, msg));
+
                 };
 
                 this.connect = function($connectURL, $protocol){
                     L.log('Trying to connect to: ' + $connectURL);
-                    var socket = new WebSocket($connectURL, $protocol);
-                    socket.addEventListener('open', handleSocketOpen);
-                    socket.addEventListener('close', handleSocketClose);
-                    socket.addEventListener('error', handleSocketError);
-                    socket.addEventListener('message', handleSocketMessage);
+                    this.socket = new WebSocket($connectURL, $protocol);
+                    this.socket.addEventListener('open', handleSocketOpen);
+                    this.socket.addEventListener('close', handleSocketClose);
+                    this.socket.addEventListener('error', handleSocketError);
+                    this.socket.addEventListener('message', handleSocketMessage);
+                };
+
+                this.sendMessage = function($msgType, $data){
+                    var msg = {};
+                    msg.messageType = $msgType;
+                    msg.dataType = 'utf8';
+                    msg.data = {};
+
+                    //Copy data
+                    for(var prop in $data){
+                        if($data.hasOwnProperty(prop)){
+                            msg.data[prop] = $data[prop];
+                        }
+                    }
+
+                    this.socket.send(JSON.stringify(msg));
                 };
             }
 
             //Inherit / Extend
             ObjUtils.inheritPrototype(SocketClient, EventDispatcher);
+            var p = SocketClient.prototype;
+
+            p.handleButtonUpdateFromUI = function($e){
+                L.log('UI Update: '+ $e.data.col, $e.data.row, $e.data.state);
+                this.sendMessage(MessageTypes.BUTTON_UPDATE,
+                    {
+                        col:$e.data.col,
+                        row:$e.data.row,
+                        state:$e.data.state
+                    }
+                );
+            };
 
             //Return constructor
             return SocketClient;

@@ -8,7 +8,7 @@ define([
     'jac/utils/ObjUtils',
     'jac/utils/EventUtils',
     'jac/logger/Logger',
-    'app/GridButtonEvent',
+    'app/events/GridButtonEvent',
     'jac/utils/DOMUtils'
 ],
     function (EventDispatcher, ObjUtils, EventUtils, L, GridButtonEvent, DOMUtils) {
@@ -48,18 +48,22 @@ define([
 
             p.setState = function($state){
                 var self = this;
-                this.state = $state;
-                L.log('' + this.state + ' / ' + this.col, this.row);
-                if(this.state == GridButton.ON_STATE){
-                    DOMUtils.addClass(self.buttonEl, 'selected');
-                    DOMUtils.removeClass(self.buttonEl, 'deSelected');
+                if($state != this.state){
+                    this.state = $state;
+                    L.log('' + this.state + ' / ' + this.col, this.row);
+                    if(this.state == GridButton.ON_STATE){
+                        DOMUtils.addClass(self.buttonEl, 'selected');
+                        DOMUtils.removeClass(self.buttonEl, 'deSelected');
+                        self.dispatchEvent(new GridButtonEvent(GridButtonEvent.ON));
 
-                } else {
-                    DOMUtils.addClass(self.buttonEl, 'deSelected');
-                    DOMUtils.removeClass(self.buttonEl, 'selected');
+                    } else {
+                        DOMUtils.addClass(self.buttonEl, 'deSelected');
+                        DOMUtils.removeClass(self.buttonEl, 'selected');
+                        self.dispatchEvent(new GridButtonEvent(GridButtonEvent.OFF));
+                    }
+
+
                 }
-
-                self.dispatchEvent(new GridButtonEvent(this.state));
             };
 
             p.toggleState = function(){

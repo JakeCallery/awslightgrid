@@ -17,11 +17,12 @@ define([
             L.log('New Main!');
             var client = null;
             var lgManager = new LGManager(window, doc);
+            lgManager.initGrid(8,8);
             L.log('New Socket Client');
             client = new SocketClient();
             L.log('Before Connect');
             client.connect('ws://1.tcp.ngrok.io:20674', 'lgproto');
             L.log('After Connect');
-            lgManager.initGrid(8,8);
+
         }();
     });
