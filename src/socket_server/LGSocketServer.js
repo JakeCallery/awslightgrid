@@ -9,6 +9,7 @@ var HTTP = require('http');
 var WebSocketServer = require('websocket').server;
 var Client = require('./Client.js');
 var Message = require('./Message.js');
+var MQTTClient = require('./MQTTClient');
 
 var SERVER_ID = 0;
 
@@ -24,6 +25,7 @@ function LGSocketServer($id){
     var connections = [];
     var httpServer = null;
     var wss = null;
+    var mqttClient = null;
 
     self.clients = [];
 
@@ -39,6 +41,7 @@ function LGSocketServer($id){
         wss.addListener('request', handleWSRequest);
         httpServer.listen(port, onServerListen);
 
+        mqttClient = new MQTTClient('LGSocketServerClient');
     };
 
     var checkValidProtocol = function($protoList){
@@ -86,7 +89,7 @@ function LGSocketServer($id){
     };
 
     var handleClientMessage = function($client, $msg){
-        console.log('ClientMessage: ' + $client.id + ' / ' + $msg.data);
+        console.log('ClientMessage: ' + $client.id + ' / ' + $msg.messageType + ' / ' + $msg.data);
         console.log($msg.data);
     };
 

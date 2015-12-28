@@ -9,6 +9,7 @@
 	"description": "Web to AWS",
 	"dependencies": {
 		"websocket": "*",
-		"node-uuid": "*"
+		"node-uuid": "*",
+		"aws-iot-device-sdk": "*"
 	}
 }
