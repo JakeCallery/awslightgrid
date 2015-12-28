@@ -1,4 +1,6 @@
 Next up (Software):
+Refactor Server so Socket Server and MQTT client are at same level (move to event driven)
+
 Send socket message on button click
 Receive socket message from server
 MQTT SDK integration with NodeJS
