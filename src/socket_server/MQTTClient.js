@@ -21,7 +21,13 @@ function MQTTClient($clientId){
 
     device
         .on('connect', function(){
-           console.log('MQTT Connect');
+           console.log('MQTT  Device Connect');
+            device.subscribe('topic_1');
+        });
+
+    device
+        .on('message', function(topic, payload){
+           console.log('Message: ', topic, payload.toString());
         });
 
 
