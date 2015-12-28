@@ -39,18 +39,26 @@ var MQTTClient = function ($clientId, $shadowName){
         console.log('MQTT offline');
     });
 
-    thingShadows.on('message', function($topic, $payload){
-        console.log('Message: ', $topic, $payload.toString());
-    });
+    //thingShadows.on('message', function($topic, $payload){
+    //    console.log('Message: ', $topic, $payload.toString());
+    //});
 
     thingShadows.on('status', function($thingName, $stat, $clientToken, $stateObject) {
+        console.log('ClientToken: ' + $clientToken);
         console.log('received ' + $stat + ' on '+ $thingName +': '+ JSON.stringify($stateObject));
+
+        if($stat == 'accepted'){
+            console.log('Caught accepted');
+            self.emit('updatefrommqtt', $stateObject);
+        } else if ($stat == 'rejected'){
+            console.log('--- Caught rejected ---');
+        }
     });
 
-    thingShadows.on('delta', function($thingName, $stateObject) {
-        console.log('received delta on ' + $thingName + ': '+ JSON.stringify($stateObject));
-        self.emit('deltafrommqtt', $stateObject);
-    });
+    //thingShadows.on('delta', function($thingName, $stateObject) {
+    //    console.log('received delta on ' + $thingName + ': '+ JSON.stringify($stateObject));
+    //    self.emit('deltafrommqtt', $stateObject);
+    //});
 
     thingShadows.on('timeout', function($thingName, $clientToken) {
         console.warn( 'timeout: ' + $thingName + ', clientToken=' + $clientToken);
@@ -71,6 +79,10 @@ var MQTTClient = function ($clientId, $shadowName){
 
         console.log('Sending Desired Update: ' + JSON.stringify(stateObj));
         thingShadows.update(shadowName, stateObj);
+    };
+
+    this.requestCurrentShadow = function(){
+        thingShadows.get(shadowName);
     };
 
 

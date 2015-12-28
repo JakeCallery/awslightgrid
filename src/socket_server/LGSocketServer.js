@@ -39,14 +39,14 @@ var LGSocketServer = function ($id){
 
     };
 
-    this.deltaFromMQTT = function($data){
-        console.log('Delta From MQTT:');
+    this.updateFromMQTT = function($data){
+        console.log('Update From MQTT:');
         console.log($data);
 
-        for(var btn in $data.state) {
+        for(var btn in $data.state.desired) {
             var col = btn.split('_')[0];
             var row = btn.split('_')[1];
-            var state = $data.state[btn];
+            var state = $data.state.desired[btn];
             var msg = {};
             msg.messageType = 'btnupd';
             msg.dataType = 'utf8';
@@ -93,6 +93,8 @@ var LGSocketServer = function ($id){
 
             var msg = new Message(SERVER_ID, Message.CONNECT);
             client.sendMessage(msg, JSON.stringify(msg));
+
+            self.emit('requestcurrentshadow');
         }
 
     };

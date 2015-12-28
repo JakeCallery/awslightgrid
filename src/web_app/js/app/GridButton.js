@@ -66,8 +66,6 @@ define([
                             self.dispatchEvent(new GridButtonEvent(GridButtonEvent.OFF));
                         }
                     }
-
-
                 }
             };
 

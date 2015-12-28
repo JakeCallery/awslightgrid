@@ -18,7 +18,12 @@ lgss.on('updatedesired', function($msg){
     mqttClient.updateDesired($msg.data.col, $msg.data.row, $msg.data.state);
 });
 
-mqttClient.on('deltafrommqtt', function($data){
+mqttClient.on('updatefrommqtt', function($data){
    console.log('Caught Update From MQTT');
-    lgss.deltaFromMQTT($data);
+    lgss.updateFromMQTT($data);
+});
+
+lgss.on('requestcurrentshadow', function(){
+   console.log('Requesting current shadow');
+    mqttClient.requestCurrentShadow();
 });
