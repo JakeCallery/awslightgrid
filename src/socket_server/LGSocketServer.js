@@ -41,7 +41,7 @@ function LGSocketServer($id){
         wss.addListener('request', handleWSRequest);
         httpServer.listen(port, onServerListen);
 
-        mqttClient = new MQTTClient('LGSocketServerClient');
+        mqttClient = new MQTTClient('LGSocketServerClient', 'AWSLightGrid');
     };
 
     var checkValidProtocol = function($protoList){
