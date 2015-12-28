@@ -32,6 +32,10 @@ function MQTTClient($clientId, $shadowName){
             console.log('MQTT caught close');
         });
 
+    thingShadows.on('message', function($topic, $payload){
+        console.log('Message: ', $topic, $payload.toString());
+    });
+
     thingShadows.on('status',
         function(thingName, stat, clientToken, stateObject) {
             console.log('received '+stat+' on '+thingName+': '+
