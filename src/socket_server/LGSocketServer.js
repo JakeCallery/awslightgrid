@@ -2,20 +2,16 @@
  * Created by Jake on 12/25/2015.
  */
 
-module.exports = LGSocketServer;
-
 var Events = require('events');
 var HTTP = require('http');
 var WebSocketServer = require('websocket').server;
 var Client = require('./Client.js');
 var Message = require('./Message.js');
 var MQTTClient = require('./MQTTClient');
-
+var util = require('util');
 var SERVER_ID = 0;
 
-function LGSocketServer($id){
-    //Super
-    Events.EventEmitter.call(this);
+var LGSocketServer = function ($id){
     var self = this;
 
     var protocol = 'lgproto';
@@ -41,7 +37,11 @@ function LGSocketServer($id){
         wss.addListener('request', handleWSRequest);
         httpServer.listen(port, onServerListen);
 
-        mqttClient = new MQTTClient('LGSocketServerClient', 'AWSLightGrid');
+    };
+
+    this.deltaFromMQTT = function($data){
+        console.log('Delta From MQTT:');
+        console.log($data);
     };
 
     var checkValidProtocol = function($protoList){
@@ -93,7 +93,8 @@ function LGSocketServer($id){
         console.log($msg.data);
 
         if($msg.messageType === 'btnupd'){
-            mqttClient.updateDesired($msg.data.col, $msg.data.row, $msg.data.state);
+            //mqttClient.updateDesired($msg.data.col, $msg.data.row, $msg.data.state);
+            self.emit('updatedesired', $msg);
         }
     };
 
@@ -112,4 +113,8 @@ function LGSocketServer($id){
         console.log((new Date() + ' Server is listening on port ' + port));
     };
 
-}
+};
+
+util.inherits(LGSocketServer, Events.EventEmitter);
+
+module.exports = LGSocketServer;

@@ -1,14 +1,13 @@
 /**
  * Created by Jake on 12/27/2015.
  */
-module.exports = MQTTClient;
 
+var util = require('util');
 var Events = require('events');
 var awsIoT = require('aws-iot-device-sdk');
 
-function MQTTClient($clientId, $shadowName){
-    //Super
-    Events.EventEmitter.call(this);
+var MQTTClient = function ($clientId, $shadowName){
+
     var self = this;
     var shadowName = $shadowName;
     var clientTokenUpdate;
@@ -44,17 +43,17 @@ function MQTTClient($clientId, $shadowName){
         console.log('Message: ', $topic, $payload.toString());
     });
 
-    thingShadows.on('status', function(thingName, stat, clientToken, stateObject) {
-        console.log('received ' + stat + ' on '+ thingName +': '+ JSON.stringify(stateObject));
+    thingShadows.on('status', function($thingName, $stat, $clientToken, $stateObject) {
+        console.log('received ' + $stat + ' on '+ $thingName +': '+ JSON.stringify($stateObject));
     });
 
-    thingShadows.on('delta', function(thingName, stateObject) {
-        console.log('received delta on ' + thingName + ': '+ JSON.stringify(stateObject));
-
+    thingShadows.on('delta', function($thingName, $stateObject) {
+        console.log('received delta on ' + $thingName + ': '+ JSON.stringify($stateObject));
+        self.emit('deltafrommqtt', $stateObject);
     });
 
-    thingShadows.on('timeout', function(thingName, clientToken) {
-        console.warn( 'timeout: ' + thingName + ', clientToken='+clientToken);
+    thingShadows.on('timeout', function($thingName, $clientToken) {
+        console.warn( 'timeout: ' + $thingName + ', clientToken=' + $clientToken);
     });
 
     this.updateDesired = function($col, $row, $state){
@@ -75,4 +74,7 @@ function MQTTClient($clientId, $shadowName){
     };
 
 
-}
+};
+
+util.inherits(MQTTClient, Events.EventEmitter);
+module.exports = MQTTClient;
