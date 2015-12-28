@@ -54,27 +54,22 @@ function MQTTClient($clientId, $shadowName){
                 clientToken);
     });
 
-    /*
-    var device = awsIoT.device({
-        keyPath: './awsCerts/private.pem.key',
-        certPath: './awsCerts/certificate.pem.crt',
-        caPath: './awsCerts/root-CA.crt',
-        clientId: $clientId,
-        region: 'us-east-1'
-    });
+    this.updateDesired = function($col, $row, $state){
+        var objName = $col + '_' + $row;
+        var stateObj =
+        {
+            "state": {
+                "desired":{
+                }
+            }
 
-    device
-        .on('connect', function(){
-           console.log('MQTT  Device Connect');
-            device.subscribe('topic_1');
-        });
+        };
 
-    device
-        .on('message', function(topic, payload){
-           console.log('Message: ', topic, payload.toString());
-        });
+        stateObj.state.desired[objName] = $state;
 
-    */
+        console.log('Sending Desired Update: ' + JSON.stringify(stateObj));
+        thingShadows.update(shadowName, stateObj);
+    };
 
 
 }

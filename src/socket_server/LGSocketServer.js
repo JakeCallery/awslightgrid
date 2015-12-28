@@ -91,6 +91,10 @@ function LGSocketServer($id){
     var handleClientMessage = function($client, $msg){
         console.log('ClientMessage: ' + $client.id + ' / ' + $msg.messageType + ' / ' + $msg.data);
         console.log($msg.data);
+
+        if($msg.messageType === 'btnupd'){
+            mqttClient.updateDesired($msg.data.col, $msg.data.row, $msg.data.state);
+        }
     };
 
     var checkOriginAllowed = function($origin){
