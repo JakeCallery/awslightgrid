@@ -42,6 +42,25 @@ var LGSocketServer = function ($id){
     this.deltaFromMQTT = function($data){
         console.log('Delta From MQTT:');
         console.log($data);
+
+        for(var btn in $data.state) {
+            var col = btn.split('_')[0];
+            var row = btn.split('_')[1];
+            var state = $data.state[btn];
+            var msg = {};
+            msg.messageType = 'btnupd';
+            msg.dataType = 'utf8';
+            msg.data = {
+                col:col,
+                row:row,
+                state:state
+            };
+
+            for(var i = 0; i < self.clients.length; i++){
+                self.clients[i].sendMessage(msg, JSON.stringify(msg));
+            }
+        }
+
     };
 
     var checkValidProtocol = function($protoList){

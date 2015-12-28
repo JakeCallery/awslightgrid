@@ -59,7 +59,7 @@ define([
                     L.log(msg);
 
                     if(msg.messageType == MessageTypes.BUTTON_UPDATE){
-                        self.geb.dispatchEvent(new ButtonUpdateFromSocketEvent(ButtonUpdateFromSocketEvent.UPDATE, msg.utf8Data));
+                        self.geb.dispatchEvent(new ButtonUpdateFromSocketEvent(ButtonUpdateFromSocketEvent.UPDATE, msg.data));
                     }
                 };
 

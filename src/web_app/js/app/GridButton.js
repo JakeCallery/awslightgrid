@@ -46,20 +46,25 @@ define([
                 self.toggleState();
             };
 
-            p.setState = function($state){
+            p.setState = function($state, $doNotify){
                 var self = this;
+                $doNotify = typeof $doNotify !== 'undefined' ? $doNotify : true;
+
                 if($state != this.state){
                     this.state = $state;
                     L.log('' + this.state + ' / ' + this.col, this.row);
                     if(this.state == GridButton.ON_STATE){
                         DOMUtils.addClass(self.buttonEl, 'selected');
                         DOMUtils.removeClass(self.buttonEl, 'deSelected');
-                        self.dispatchEvent(new GridButtonEvent(GridButtonEvent.ON));
-
+                        if($doNotify){
+                            self.dispatchEvent(new GridButtonEvent(GridButtonEvent.ON));
+                        }
                     } else {
                         DOMUtils.addClass(self.buttonEl, 'deSelected');
                         DOMUtils.removeClass(self.buttonEl, 'selected');
-                        self.dispatchEvent(new GridButtonEvent(GridButtonEvent.OFF));
+                        if($doNotify){
+                            self.dispatchEvent(new GridButtonEvent(GridButtonEvent.OFF));
+                        }
                     }
 
 

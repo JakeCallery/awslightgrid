@@ -106,6 +106,9 @@ define([
             p.handleUpdateFromSocket = function($e){
                 L.log('Caught Update From Socket: ');
                 L.log($e.data);
+
+                this.buttonGrid[$e.data.col][$e.data.row].setState($e.data.state, false);
+
             };
             //Return constructor
             return LGManager;
