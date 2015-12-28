@@ -21,10 +21,17 @@ function MQTTClient($clientId, $shadowName){
         region: 'us-east-1'
     });
 
-    thingShadows.on('connect', function(){
-        console.log('MQTT Connected');
-        thingShadows.register($shadowName);
+    thingShadows
+        .on('connect', function(){
+            console.log('MQTT Connected');
+            thingShadows.register($shadowName, { persistentSubscribe: true });
     });
+
+    thingShadows
+        .on('reconnect', function() {
+            thingShadows.register( $shadowName, { persistentSubscribe: true } );
+            console.log('MQTT reconnect');
+        });
 
     thingShadows
         .on('close', function() {
@@ -32,26 +39,29 @@ function MQTTClient($clientId, $shadowName){
             console.log('MQTT caught close');
         });
 
-    thingShadows.on('message', function($topic, $payload){
-        console.log('Message: ', $topic, $payload.toString());
+    thingShadows
+        .on('offline', function() {
+            console.log('MQTT offline');
+        });
+
+    thingShadows
+        .on('message', function($topic, $payload){
+            console.log('Message: ', $topic, $payload.toString());
     });
 
-    thingShadows.on('status',
-        function(thingName, stat, clientToken, stateObject) {
-            console.log('received '+stat+' on '+thingName+': '+
-                JSON.stringify(stateObject));
+    thingShadows
+        .on('status', function(thingName, stat, clientToken, stateObject) {
+            console.log('received ' + stat + ' on '+ thingName +': '+ JSON.stringify(stateObject));
     });
 
-    thingShadows.on('delta',
-        function(thingName, stateObject) {
-            console.log('received delta '+' on '+thingName+': '+
-                JSON.stringify(stateObject));
+    thingShadows
+        .on('delta', function(thingName, stateObject) {
+            console.log('received delta on ' + thingName + ': '+ JSON.stringify(stateObject));
     });
 
-    thingShadows.on('timeout',
-        function(thingName, clientToken) {
-            console.log('received timeout '+' on '+operation+': '+
-                clientToken);
+    thingShadows
+        .on('timeout', function(thingName, clientToken) {
+            console.warn( 'timeout: ' + thingName + ', clientToken='+clientToken);
     });
 
     this.updateDesired = function($col, $row, $state){
