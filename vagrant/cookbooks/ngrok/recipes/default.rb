@@ -1,3 +1,7 @@
+execute "Add ngrok start on boot" do
+  command "/vagrant/setupNgrokCron.sh"
+end
+
 execute "Start Ngrok Tunnels" do
-  command "/ngrok/ngrok start -config /ngrok/ngrok.yml -log=stdout --all > /dev/null &"
+  command "/ngrok/startNgrok.sh"
 end

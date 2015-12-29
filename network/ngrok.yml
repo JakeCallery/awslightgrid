@@ -1,6 +1,7 @@
 authtoken: 7XB5HxKpEfQpsoQc4tW4d_7UTdZBwytdH5SoyiPHVZ4
 
 web_addr: 0.0.0.0:4040
+log: /var/log/ngrok.log
 
 tunnels:
   webclient:
