@@ -14,7 +14,8 @@ Vagrant.configure(2) do |config|
 	config.vm.define "AWSLightGrid" do |server|
 		#server.vm.network "forwarded_port", guest: 5252, host: 5252
 		#server.vm.network "forwarded_port", guest: 80, host: 8080
-		server.vm.network "forwarded_port", host_ip: "127.0.0.1", host: 4141, guest_ip: "127.0.0.1", guest: 4040
+		#server.vm.network "forwarded_port", host_ip: "127.0.0.1", host: 4141, guest_ip: "127.0.0.1", guest: 4040
+		server.vm.network "private_network", ip:"192.168.10.95"
 
     server.vm.synced_folder "./filestocopy", "/vagrant_filestocopy"
 		server.vm.synced_folder "../src/web_app", "/vagrant_web_app"
@@ -41,7 +42,7 @@ Vagrant.configure(2) do |config|
 			chef.add_recipe "python"
 			chef.add_recipe "pip"
 			chef.add_recipe "nodejs"
-      #chef.add_recipe "ngrok"
+      chef.add_recipe "ngrok"
       chef.add_recipe "paho-mqtt"
       chef.add_recipe "mosquitto"
 
