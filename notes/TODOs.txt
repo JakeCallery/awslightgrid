@@ -15,8 +15,7 @@ test turning on and off trellis lights
 test catching trellis button presses
 
 IT:
-Make Vagrant setup to build and deploy socket software to linux server
-maybe even run ngrok on that server?
+
 
 DONE:
 Send socket message on button click
@@ -24,3 +23,7 @@ MQTT SDK integration with NodeJS
 Refactor Server so Socket Server and MQTT client are at same level (move to event driven)
 Receive socket message from server
 Update Socket Clients when shadow changes.
+Make Vagrant setup to build and deploy socket software to linux server
+maybe even run ngrok on that server?
+Install mosquitto during provisioning
+install web server during provisioning
