@@ -1,13 +1,32 @@
 'use strict';
 process.title = "LBSocketServer";
 
+//handle args
+var parseArgs = require('minimist');
+var parseArgsOpts = {};
+parseArgsOpts.default = true;
+var argv = parseArgs((process.argv.slice(2)), parseArgsOpts);
+
+console.log(argv);
+
 //Create Socket SErver
 var LGSocketServer = require('./LGSocketServer.js');
 var lgss = new LGSocketServer('LGSocketServer');
+var mqttClient = null;
 
-//Create and start MQTT Client
-var MQTTClient = require('./MQTTClient.js');
-var mqttClient = new MQTTClient('LGSocketServerClient', 'AWSLightGrid');
+if(argv.hasOwnProperty('mqtt') && argv['mqtt'] == 'aws'){
+    console.log('Connecting to AWS MQTT broker...');
+    //Create and start MQTT Client
+    var MQTTClient = require('./AWSMQTTClient.js');
+    mqttClient = new MQTTClient('LGSocketServerClient', 'AWSLightGrid');
+    mqttClient.on('updatefrommqtt', function($data){
+        console.log('Caught Update From MQTT');
+        lgss.updateFromMQTT($data);
+    });
+
+} else {
+    console.log('Connecting to JAC MQTT Broker...');
+}
 
 //Start Socket Server
 var port = process.env.PORT || 5252;
@@ -16,11 +35,6 @@ lgss.start(port);
 lgss.on('updatedesired', function($msg){
     console.log('Caught Update Desired');
     mqttClient.updateDesired($msg.data.col, $msg.data.row, $msg.data.state);
-});
-
-mqttClient.on('updatefrommqtt', function($data){
-   console.log('Caught Update From MQTT');
-    lgss.updateFromMQTT($data);
 });
 
 lgss.on('requestcurrentshadow', function(){

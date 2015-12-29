@@ -10,6 +10,7 @@
 	"dependencies": {
 		"websocket": "*",
 		"node-uuid": "*",
-		"aws-iot-device-sdk": "*"
+		"aws-iot-device-sdk": "*",
+		"minimist": "*"
 	}
 }

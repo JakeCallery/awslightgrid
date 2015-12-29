@@ -6,7 +6,7 @@ var util = require('util');
 var Events = require('events');
 var awsIoT = require('aws-iot-device-sdk');
 
-var MQTTClient = function ($clientId, $shadowName){
+var AWSMQTTClient = function ($clientId, $shadowName){
 
     var self = this;
     var shadowName = $shadowName;
@@ -85,8 +85,7 @@ var MQTTClient = function ($clientId, $shadowName){
         thingShadows.get(shadowName);
     };
 
-
 };
 
-util.inherits(MQTTClient, Events.EventEmitter);
-module.exports = MQTTClient;
+util.inherits(AWSMQTTClient, Events.EventEmitter);
+module.exports = AWSMQTTClient;

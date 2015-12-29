@@ -7,7 +7,6 @@ var HTTP = require('http');
 var WebSocketServer = require('websocket').server;
 var Client = require('./Client.js');
 var Message = require('./Message.js');
-var MQTTClient = require('./MQTTClient');
 var util = require('util');
 var SERVER_ID = 0;
 
@@ -21,7 +20,6 @@ var LGSocketServer = function ($id){
     var connections = [];
     var httpServer = null;
     var wss = null;
-    var mqttClient = null;
 
     self.clients = [];
 
@@ -114,7 +112,6 @@ var LGSocketServer = function ($id){
         console.log($msg.data);
 
         if($msg.messageType === 'btnupd'){
-            //mqttClient.updateDesired($msg.data.col, $msg.data.row, $msg.data.state);
             self.emit('updatedesired', $msg);
         }
     };
