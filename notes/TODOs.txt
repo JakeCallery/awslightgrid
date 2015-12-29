@@ -1,4 +1,5 @@
 Next up (Software):
+Add options to point clients to self hosted MQTT instead of AWS
 
 Create Standalone Edison Python code
     - catch button presses
