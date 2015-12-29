@@ -1,7 +1,4 @@
 Next up (Software):
-Refactor Server so Socket Server and MQTT client are at same level (move to event driven)
-Receive socket message from server
-Update Socket Clients when shadow changes.
 
 Create Standalone Edison Python code
     - catch button presses
@@ -24,3 +21,6 @@ maybe even run ngrok on that server?
 DONE:
 Send socket message on button click
 MQTT SDK integration with NodeJS
+Refactor Server so Socket Server and MQTT client are at same level (move to event driven)
+Receive socket message from server
+Update Socket Clients when shadow changes.
