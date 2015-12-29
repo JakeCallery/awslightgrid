@@ -43,12 +43,7 @@ Vagrant.configure(2) do |config|
 			chef.add_recipe "nodejs"
       chef.add_recipe "ngrok"
       chef.add_recipe "paho-mqtt"
-			
-			#start ngrok tunnels
-			#sym link web parts
-			#sym link socket server parts
-			#copy certs/keys
-			
+
 		end
 
 		
