@@ -12,7 +12,7 @@ file "/etc/apache2/sites-available/awslightgrid.ngrok.io.conf" do
 	owner "root"
 	group "root"
 	mode 0644
-	content ::File.open("/vagrant_filestocopy/apache_configs/awslightgrid.ngrok.io.conf").read
+	content IO.read("/vagrant_filestocopy/apache_configs/awslightgrid.ngrok.io.conf")
 	action :create
 end
 

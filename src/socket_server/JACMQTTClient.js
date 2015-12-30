@@ -24,6 +24,22 @@ var JACMQTTClient = function($clientId, $shadowName){
 
     });
 
+    client.on('reconnect', function(){
+        console.log('JAC MQTT caught reconnect');
+    });
+
+    client.on('close', function(){
+       console.log('JAC MQTT connection closed');
+    });
+
+    client.on('offline', function(){
+       console.log('JAC MQTT caught offline');
+    });
+
+    client.on('error', function($error){
+        console.log('JAC MQTT caught error: ' + $error.toString());
+    });
+
     client.on('message', function($topic, $payload){
         console.log('Topic: ' + $topic);
         console.log('Message: ' + $payload.toString());
