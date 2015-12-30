@@ -13,3 +13,8 @@ tunnels:
     proto: tcp
     addr: 5252
     remote_addr: 1.tcp.ngrok.io:20674
+
+  jacmqtt:
+    proto: tcp
+    addr: 1883
+    remote_addr: 1.tcp.ngrok.io:20675
