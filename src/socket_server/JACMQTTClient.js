@@ -5,11 +5,18 @@
 var Events = require('events');
 var mqtt = require('mqtt');
 var util = require('util');
+var fs = require('fs');
+var sqlite3 = require('sqlite3').verbose();
 
 var JACMQTTClient = function($clientId, $shadowName){
     var self = this;
     var shadowName = $shadowName;
 
+    //setup db
+    var shadowFilePath = 'db/shadow.db';
+    var db;
+
+    //connect to mqtt broker
     var options = {
         host: '1.tcp.ngrok.io',
         port: 20675,
@@ -17,8 +24,11 @@ var JACMQTTClient = function($clientId, $shadowName){
     };
     var client = mqtt.connect(options);
 
+
+    //handle client events
     client.on('connect', function(){
         console.log('Connected to JACMQTT');
+        self.dbSetup(shadowFilePath);
         client.subscribe(shadowName + '/' + 'status');
         client.subscribe(shadowName + '/' + 'get');
 
@@ -60,6 +70,41 @@ var JACMQTTClient = function($clientId, $shadowName){
         }
 
     });
+
+    this.fileExists = function($path){
+        try{
+            fs.statSync($path);
+        }catch(err){
+            if(err.code == 'ENOENT') return false;
+        }
+        return true;
+    };
+
+    this.dbSetup = function($dbFilePath){
+        var exists = self.fileExists($dbFilePath);
+        self.db = new sqlite3.Database($dbFilePath);
+        self.db.serialize(function(){
+            if(!exists){
+                self.db.run('CREATE TABLE shadow_tbl (id INT NOT NULL, state TEXT NOT NULL)');
+                //Pre populate
+                var statement = self.db.prepare("INSERT INTO shadow_tbl (id, state) VALUES (?,?)");
+
+                for(var i = 0; i < (8*8); i++){
+                    statement.run(i,"false");
+                }
+
+                //Insert
+                statement.finalize();
+            }
+
+            //Print out current state
+            self.db.each("SELECT rowid AS id, state FROM shadow_tbl", function(err, row){
+                console.log(row.id + ": " + row.state);
+            });
+
+        });
+
+    };
 
     this.updateDesired = function($col, $row, $state){
         var objName = $col + '_' + $row;
