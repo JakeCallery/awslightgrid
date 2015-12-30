@@ -27,8 +27,8 @@ Vagrant.configure(2) do |config|
     server.vm.synced_folder "../src/socket_server", "/vagrant_socket_server"
 
 		server.vm.provision "file",
-			source: "../network/ngrok.yml",
-			destination: "~/ngrok/ngrok.yml"
+		source: "./filestocopy/ngrok/ngrok.yml",
+		destination: "~/ngrok/ngrok.yml"
 
     server.vm.provision "file",
 			source: "./filestocopy/ngrok/ngrok",

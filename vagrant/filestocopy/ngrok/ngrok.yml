@@ -1,0 +1,20 @@
+authtoken: 7XB5HxKpEfQpsoQc4tW4d_7UTdZBwytdH5SoyiPHVZ4
+
+web_addr: 0.0.0.0:4040
+log: /var/log/ngrok.log
+
+tunnels:
+#  webclient:
+#    proto: http
+#    addr: 8080
+#    subdomain: awslightgrid
+
+#  socketclient:
+#    proto: tcp
+#    addr: 5252
+#    remote_addr: 1.tcp.ngrok.io:20674
+
+  jacmqtt:
+    proto: tcp
+    addr: 1883
+    remote_addr: 1.tcp.ngrok.io:20675
