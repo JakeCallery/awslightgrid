@@ -1,16 +1,17 @@
 {
-	"name": "LGSocketServer",
-	"version": "0.0.1",
-	"main": "main.js",
-	"author": {
-		"name": "Jake Callery",
-		"email": "<jake@subvoicestudios.com>"
-	},
-	"description": "Web to AWS",
-	"dependencies": {
-		"websocket": "*",
-		"node-uuid": "*",
-		"aws-iot-device-sdk": "*",
-		"minimist": "*"
-	}
+  "name": "LGSocketServer",
+  "version": "0.0.1",
+  "main": "main.js",
+  "author": {
+    "name": "Jake Callery",
+    "email": "<jake@subvoicestudios.com>"
+  },
+  "description": "Web to AWS",
+  "dependencies": {
+    "aws-iot-device-sdk": "^1.0.9",
+    "minimist": "^1.2.0",
+    "mqtt": "^1.6.3",
+    "node-uuid": "^1.4.7",
+    "websocket": "^1.0.22"
+  }
 }
