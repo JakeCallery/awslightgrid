@@ -1,5 +1,4 @@
 Next up (Software):
-fix option parser on linux
 pass messages to socket server from jac mqtt
 DB backed "shadow" for jacmqtt
 implement certs/keys for jac mqtt
@@ -34,3 +33,4 @@ maybe even run ngrok on that server?
 Install mosquitto during provisioning
 install web server during provisioning
 Add options to point clients to self hosted MQTT instead of AWS
+fix option parser on linux
