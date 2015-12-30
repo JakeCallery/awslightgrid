@@ -1,5 +1,7 @@
 Next up (Software):
-Add options to point clients to self hosted MQTT instead of AWS
+fix option parser on linux
+pass messages to socket server from jac mqtt
+DB backed "shadow" for jacmqtt
 implement certs/keys for jac mqtt
 
 Create Standalone Edison Python code
@@ -18,6 +20,8 @@ test catching trellis button presses
 
 IT:
 certs and keys for jac mqtt
+set up mosquitto config file (for logging)
+pull socket server from git then npm install then start
 
 DONE:
 Send socket message on button click
@@ -29,3 +33,4 @@ Make Vagrant setup to build and deploy socket software to linux server
 maybe even run ngrok on that server?
 Install mosquitto during provisioning
 install web server during provisioning
+Add options to point clients to self hosted MQTT instead of AWS
