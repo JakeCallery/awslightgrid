@@ -1,10 +1,37 @@
-class MQTTClient:
-	def __init__(self, log=None, mqtt=None):
-		if log:
-			log.debug('Creating MQTTClient Obj')
+import paho.mqtt.client as mqtt
 
-		if not mqtt:
-			log.error('MQTT type is required')
+
+class MQTTClient:
+	def __init__(self, log=None, mqtt_type=None):
+		self._log = log
+		self._log.debug('Creating MQTTClient Obj')
+
+		if not mqtt_type:
+			self._log.error('MQTT type is required')
 			raise ValueError("MQTT Type is required (aws,jac)")
 
-		log.info('Creating JAC MQTT Client')
+		self._log.info('Creating JAC MQTT Client')
+
+		self._client = mqtt.Client()
+		self._client.on_connect = self._on_connect
+		self._client.on_subscribe = self._on_subscribe
+		self._client.on_message = self._on_message
+
+	def _on_connect(self, client, object, flags, rc):
+		self._log.info("Subscriber Connection status code: " + str(rc) + " | Connection status: successful")
+
+	def _on_subscribe(self, client, obj, mid, granted_qos):
+		self._log.info("Subscribed: " + str(mid) + " " + str(granted_qos) + "  data:" + str(obj))
+
+	def _on_message(self, obj, msg):
+		self._log.debug("Received message from topic: " + msg.topic + " | QoS: " + str(msg.qos) + " | Data Received: " + str(msg.payload))
+
+	def connect(self, host=None, port=None):
+		self._client.connect(host, port=port)
+		self._log.debug('After connect call')
+
+		#TODO: deal with message pump a different way
+		self._client.loop_forever()
+		self._log.debug('After Loop Forever')
+
+

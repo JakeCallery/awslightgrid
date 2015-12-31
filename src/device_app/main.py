@@ -36,13 +36,16 @@ if ENABLE_FILE_LOGGING:
 log.setLevel(LOG_LEVEL)
 log.disabled = not ENABLE_LOGGING
 
+
 def grab_args():
 	parser = ArgumentParser(prog=__name__)
 	parser.add_argument("--mqtt", dest="mqtt")
 	return parser.parse_known_args()
 
+
 if __name__ == "__main__":
 	log.info("Main")
 	options, unknown_args = grab_args()
 
-	mqttClient = MQTTClient(log=log, mqtt=options.mqtt)
+	mqttClient = MQTTClient(log=log, mqtt_type=options.mqtt)
+	mqttClient.connect(host='1.tcp.ngrok.io', port=20675)
