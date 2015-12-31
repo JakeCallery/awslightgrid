@@ -19,7 +19,7 @@ test catching trellis button presses
 
 IT:
 certs and keys for jac mqtt
-pull socket server from git then npm install then start
+pull socket server from git (during provisioning) then npm install then start
 
 DONE:
 Send socket message on button click
