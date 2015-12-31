@@ -1,5 +1,4 @@
 Next up (Software):
-DB backed "shadow" for jacmqtt
 reconnect on suspend (web clients)
 implement certs/keys for jac mqtt
 error messaging on web clients
@@ -19,7 +18,6 @@ test turning on and off trellis lights
 test catching trellis button presses
 
 IT:
-add mosquitto config file changes to provisioning
 certs and keys for jac mqtt
 pull socket server from git then npm install then start
 
@@ -37,3 +35,5 @@ Add options to point clients to self hosted MQTT instead of AWS
 fix option parser on linux
 pass messages to socket server from jac mqtt
 set up mosquitto config file (for logging)
+DB backed "shadow" for jacmqtt
+add mosquitto config file changes to provisioning
