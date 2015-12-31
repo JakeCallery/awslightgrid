@@ -1,4 +1,5 @@
 import paho.mqtt.client as mqtt
+import json
 from ..utils.events import EventHandler
 
 
@@ -36,9 +37,16 @@ class MQTTClient:
 		self._client.connect(host, port=port)
 		self._log.debug('After connect call')
 
-		#TODO: deal with message pump a different way
-		self._client.loop_forever()
-		#self._client.loop_start()
-		self._log.debug('After Loop Forever')
+		self._log.debug('Starting message pump')
+		self._client.loop_start()
+		self._log.debug('After Loop Start')
 
+	def button_update_from_hardware(self, button_obj):
+		state_obj = {
+			"state": {
+				"desired": button_obj
+			}
+		}
+
+		self._client.publish('AWSLightGrid/status', json.dumps(state_obj))
 
