@@ -69,8 +69,6 @@ var JACMQTTClient = function($clientId, $shadowName){
                     }
                 };
 
-                //shadowObj.state.desired = self.getFullShadowState();
-                //self.emit('updatefrommqtt', JSON.stringify(shadowObj));
                 self.getFullShadowState(function($stateObj){
                     console.log('Full Shadow Callback');
                     shadowObj.state.desired = $stateObj;
@@ -152,12 +150,31 @@ var JACMQTTClient = function($clientId, $shadowName){
         stateObj.state.desired[objName] = $state;
 
         console.log('Sending Desired Update: ' + JSON.stringify(stateObj));
-        //TODO update db here
+        var key;
+        for(var prop in stateObj.state.desired){
+
+            if(stateObj.state.desired.hasOwnProperty(prop) && prop.split('_').length == 2){
+                key = prop;
+                break;
+            }
+        }
+
+        var col = parseInt(key.split('_')[0]);
+        var row = parseInt(key.split('_')[1]);
+        var state = stateObj.state.desired[key];
+        var id = row * 8 + col;
+        console.log('Updating: ', col, row);
+        self.db.serialize(function(){
+            self.db.run("BEGIN TRANSACTION")
+                .run("UPDATE shadow_tbl SET state = ? WHERE id = ?", [state.toString(), id])
+                .exec("COMMIT");
+        });
+
+        console.log('Publish Desired Update');
         client.publish(shadowName + '/' + 'status', JSON.stringify(stateObj));
     };
 
     this.requestCurrentShadow = function(){
-        //TODO: Get shadow from db, publish result
         client.publish(shadowName + '/' + 'get', 'fullshadow');
     };
 

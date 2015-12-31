@@ -109,7 +109,7 @@ define([
                 L.log('Caught Update From Socket: ');
                 L.log($e.data);
 
-                this.buttonGrid[$e.data.col][$e.data.row].setState(StringUtils.toBoolean($e.data.state), false);
+                this.buttonGrid[$e.data.col][$e.data.row].setState(StringUtils.toBoolean($e.data.state.toString()), false);
 
             };
             //Return constructor
