@@ -2,6 +2,7 @@
 import platform
 import logging
 import sys
+
 from argparse import ArgumentParser
 from packages.MQTTClient import MQTTClient
 
@@ -43,9 +44,19 @@ def grab_args():
 	return parser.parse_known_args()
 
 
+def handle_mqtt_message(sender, payload):
+	log.debug("Main Caught Message: " + str(payload))
+
 if __name__ == "__main__":
 	log.info("Main")
 	options, unknown_args = grab_args()
 
 	mqttClient = MQTTClient(log=log, mqtt_type=options.mqtt)
+	mqttClient.messageEvent += handle_mqtt_message
+
 	mqttClient.connect(host='1.tcp.ngrok.io', port=20675)
+
+	while True:
+		pass
+
+

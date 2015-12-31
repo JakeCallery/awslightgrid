@@ -1,10 +1,13 @@
 import paho.mqtt.client as mqtt
+from ..utils.events import EventHandler
 
 
 class MQTTClient:
 	def __init__(self, log=None, mqtt_type=None):
 		self._log = log
 		self._log.debug('Creating MQTTClient Obj')
+
+		self.messageEvent = EventHandler(self)
 
 		if not mqtt_type:
 			self._log.error('MQTT type is required')
@@ -27,6 +30,7 @@ class MQTTClient:
 
 	def _on_message(self, client, userdata, msg):
 		self._log.debug("Received message from topic: " + msg.topic + " | QoS: " + str(msg.qos) + " | Data Received: " + str(msg.payload))
+		self.messageEvent(msg.payload)
 
 	def connect(self, host=None, port=None):
 		self._client.connect(host, port=port)
