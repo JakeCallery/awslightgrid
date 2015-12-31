@@ -13,12 +13,14 @@ define([
     'app/GridButton',
     'jac/events/GlobalEventBus',
     'app/events/ButtonUpdateFromUIEvent',
-    'app/events/ButtonUpdateFromSocketEvent'
+    'app/events/ButtonUpdateFromSocketEvent',
+    'jac/utils/StringUtils'
 
 ],
     function (EventDispatcher,ObjUtils,L,DOMUtils,
               EventUtils,GridButtonEvent,GridButton,GEB,
-              ButtonUpdateFromUIEvent, ButtonUpdateFromSocketEvent) {
+              ButtonUpdateFromUIEvent, ButtonUpdateFromSocketEvent,
+              StringUtils) {
         return (function () {
             /**
              * Creates a LGManager object
@@ -107,7 +109,7 @@ define([
                 L.log('Caught Update From Socket: ');
                 L.log($e.data);
 
-                this.buttonGrid[$e.data.col][$e.data.row].setState($e.data.state, false);
+                this.buttonGrid[$e.data.col][$e.data.row].setState(StringUtils.toBoolean($e.data.state), false);
 
             };
             //Return constructor

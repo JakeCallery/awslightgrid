@@ -62,6 +62,22 @@ var JACMQTTClient = function($clientId, $shadowName){
 
             case (shadowName + '/' + 'get'):
                 console.log('Caught Get');
+                var shadowObj = {
+                    "state":{
+                        "desired":{
+                        }
+                    }
+                };
+
+                //shadowObj.state.desired = self.getFullShadowState();
+                //self.emit('updatefrommqtt', JSON.stringify(shadowObj));
+                self.getFullShadowState(function($stateObj){
+                    console.log('Full Shadow Callback');
+                    shadowObj.state.desired = $stateObj;
+                    client.publish(shadowName + '/' + 'status', JSON.stringify(shadowObj));
+                });
+
+                console.log('before break');
                 break;
 
             default:
@@ -70,6 +86,23 @@ var JACMQTTClient = function($clientId, $shadowName){
         }
 
     });
+
+    this.getFullShadowState = function($callback){
+
+        self.db.all("SELECT * FROM shadow_tbl", function (err, all) {
+            var stateObj = {};
+            for(var i = 0; i < all.length; i++){
+                var id = all[i].id;
+                var row = Math.floor(id / 8);
+                var col = id % 8;
+                var objName = col.toString() + '_' + row.toString();
+                stateObj[objName] = all[i].state;
+            }
+
+            $callback(stateObj);
+        });
+        console.log('End of getFullShadowState');
+    };
 
     this.fileExists = function($path){
         try{
