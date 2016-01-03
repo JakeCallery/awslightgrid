@@ -1,5 +1,5 @@
 from ..utils.events import EventHandler
-
+import time
 
 class MockDevice:
 	def __init__(self, log=None):
@@ -19,3 +19,10 @@ class MockDevice:
 	def test_button_press(self, button_obj):
 		self._log.debug('Testing button press')
 		self.button_update_event(button_obj)
+
+	def start_loop(self):
+		while True:
+			self._log.debug("Sleep Start")
+			time.sleep(10)
+			self.test_button_press({"0_0": "true"})
+			self._log.debug("Sleep End")

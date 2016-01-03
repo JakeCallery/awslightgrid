@@ -16,7 +16,7 @@
 #   Python port created by Tony DiCola (tony@tonydicola.com
 
 try:
-	import Adafruit_I2C
+	from ..Adafruit_I2C import Adafruit_I2C
 except ImportError:
 	raise ImportError('Could not find Adafruit_I2C library.  If running on the Beaglebone make sure the' \
 					  ' Adafruit_BBIO library is installed.  If running on the Raspberry Pi make sure the Adafruit_I2C.py' \
@@ -54,7 +54,7 @@ class Adafruit_Trellis(object):
 
 	def begin(self, addr = 0x70, bus = -1):
 		"""Initialize the Trellis at the provided I2C address and bus number."""
-		self._i2c = Adafruit_I2C.Adafruit_I2C(addr, bus)
+		self._i2c = Adafruit_I2C(addr, bus)
 		self._i2c.writeList(0x21, [0]) # Turn on the oscillator.
 		self.blinkRate(HT16K33_BLINK_OFF)
 		self.setBrightness(15) # Max brightness.

@@ -20,8 +20,5 @@ class DeviceManager:
 		self._device.update_button(button_obj)
 
 	def run(self):
-		while True:
-			self._log.debug("Sleep Start")
-			time.sleep(10)
-			self._device.test_button_press({"0_0": "true"})
-			self._log.debug("Sleep End")
+		self._device.start_loop()
+

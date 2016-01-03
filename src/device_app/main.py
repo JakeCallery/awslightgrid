@@ -9,6 +9,7 @@ from argparse import ArgumentParser
 from packages.MQTTClient import MQTTClient
 from packages.DeviceManager import DeviceManager
 from packages.MockDevice import MockDevice
+from packages.EdisonDevice import EdisonDevice
 
 # ### SETTINGS ###
 ENABLE_LOGGING = True
@@ -72,7 +73,9 @@ if __name__ == "__main__":
 
 	#set up hardware
 	mock_device = MockDevice(log=log)
-	deviceManager = DeviceManager(device=mock_device, log=log)
+	edison_device = EdisonDevice(4, 4, log=log)
+	#deviceManager = DeviceManager(device=mock_device, log=log)
+	deviceManager = DeviceManager(device=edison_device, log=log)
 	deviceManager.buttonUpdateEvent += handle_device_button_update
 
 	#connect and kick off message pump
