@@ -37,17 +37,19 @@ class EdisonDevice:
 					# Alternate the LED
 					if self._trellis.isLED(i):
 						self._trellis.clrLED(i)
+						self._handle_button_press(i, False)
 					else:
 						self._trellis.setLED(i)
+						self._handle_button_press(i, True)
 			# tell the trellis to set the LEDs we requested
 			self._trellis.writeDisplay()
 
 	def _handle_button_press(self, button_index, new_state):
-		self._log('handle buton press: ' + str(button_index) + ':' + str(new_state))
+		self._log.debug('handle buton press: ' + str(button_index) + ':' + str(new_state))
 
 		#convert index to button object
-		row = math.floor(button_index / self._numCols)
-		col = button_index % self._numCols
+		row = int(button_index / self._numCols)
+		col = int(button_index % self._numCols)
 		prop_str = str(col) + '_' + str(row)
 		button_obj = dict()
 		button_obj[prop_str] = new_state
