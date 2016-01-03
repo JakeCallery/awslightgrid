@@ -19,6 +19,7 @@ class DeviceManager:
 	def update_button(self, button_obj):
 		self._device.update_button(button_obj)
 
-	def run(self):
-		self._device.start_loop()
+	def update(self):
+		self._device.update()
+
 

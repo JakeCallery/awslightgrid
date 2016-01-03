@@ -20,9 +20,8 @@ class MockDevice:
 		self._log.debug('Testing button press')
 		self.button_update_event(button_obj)
 
-	def start_loop(self):
-		while True:
-			self._log.debug("Sleep Start")
-			time.sleep(10)
-			self.test_button_press({"0_0": "true"})
-			self._log.debug("Sleep End")
+	def update(self):
+		self._log.debug("Sleep Start")
+		time.sleep(10)
+		self.test_button_press({"0_0": "true"})
+		self._log.debug("Sleep End")

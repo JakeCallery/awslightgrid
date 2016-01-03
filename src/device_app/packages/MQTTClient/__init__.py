@@ -9,6 +9,7 @@ class MQTTClient:
 		self._log.debug('Creating MQTTClient Obj')
 
 		self.messageEvent = EventHandler(self)
+		self.connectedEvent = EventHandler(self)
 
 		if not mqtt_type:
 			self._log.error('MQTT type is required')

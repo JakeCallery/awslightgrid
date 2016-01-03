@@ -74,6 +74,7 @@ if __name__ == "__main__":
 	#set up hardware
 	mock_device = MockDevice(log=log)
 	edison_device = EdisonDevice(4, 4, log=log)
+	edison_device.show_off_display()
 	#deviceManager = DeviceManager(device=mock_device, log=log)
 	deviceManager = DeviceManager(device=edison_device, log=log)
 	deviceManager.buttonUpdateEvent += handle_device_button_update
@@ -81,7 +82,15 @@ if __name__ == "__main__":
 	#connect and kick off message pump
 	mqttClient.connect(host='1.tcp.ngrok.io', port=20675)
 
-	deviceManager.run()
+	#run it all
+	while True:
+		if deviceManager._device == mock_device:
+			time.sleep(10)
+		else:
+			time.sleep(0.03)
+
+		deviceManager.update()
+
 
 
 

@@ -42,7 +42,7 @@ class Adafruit_I2C(object):
 		# self.bus = smbus.SMBus(0); # Force I2C0 (early 256MB Pi's)
 		# self.bus = smbus.SMBus(1); # Force I2C1 (512MB Pi's)
 		self.bus = smbus.SMBus(busnum if busnum >= 0 else Adafruit_I2C.getPiI2CBusNumber())
-		self.debug = True
+		self.debug = debug
 
 	def reverseByteOrder(self, data):
 		"Reverses the byte order of an int (16-bit) or long (32-bit) value"

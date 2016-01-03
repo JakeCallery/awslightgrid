@@ -26,27 +26,21 @@ class EdisonDevice:
 		self._log.info('Starting Trellis')
 		self._trellis.begin((0x70, I2C_BUS))
 
-	def start_loop(self):
-
-		self.show_off_display()
-
-		while True:
-			time.sleep(0.03)
-
-			# If a button was just pressed or released...
-			if self._trellis.readSwitches():
-				# go through every button
-				for i in range(self._num_buttons):
-					# if it was pressed...
-					if self._trellis.justPressed(i):
-						self._log.debug('v{0}'.format(i))
-						# Alternate the LED
-						if self._trellis.isLED(i):
-							self._trellis.clrLED(i)
-						else:
-							self._trellis.setLED(i)
-				# tell the trellis to set the LEDs we requested
-				self._trellis.writeDisplay()
+	def update(self):
+		# If a button was just pressed or released...
+		if self._trellis.readSwitches():
+			# go through every button
+			for i in range(self._num_buttons):
+				# if it was pressed...
+				if self._trellis.justPressed(i):
+					self._log.debug('v{0}'.format(i))
+					# Alternate the LED
+					if self._trellis.isLED(i):
+						self._trellis.clrLED(i)
+					else:
+						self._trellis.setLED(i)
+			# tell the trellis to set the LEDs we requested
+			self._trellis.writeDisplay()
 
 	def _handle_button_press(self, button_index, new_state):
 		self._log('handle buton press: ' + str(button_index) + ':' + str(new_state))
@@ -85,10 +79,15 @@ class EdisonDevice:
 		#handle hardware
 		index = row * self._numCols + col
 		if index < self._num_buttons:
-			if state == 'true' or state == 'True' or state == True:
+			if state == 'true' or state == 'True' or state is True:
+				self._log.debug('Setting LED')
 				self._trellis.setLED(index)
 			else:
+				self._log.debug('Clearing LED')
 				self._trellis.clrLED(index)
+
+			self._trellis.writeDisplay()
+
 		else:
 			self._log.error('Button index: ' + str(index) + ' out of range!')
 
