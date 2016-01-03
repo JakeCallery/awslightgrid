@@ -8,6 +8,7 @@ import json
 from argparse import ArgumentParser
 from packages.MQTTClient import MQTTClient
 from packages.DeviceManager import DeviceManager
+from packages.MockDevice import MockDevice
 
 # ### SETTINGS ###
 ENABLE_LOGGING = True
@@ -57,6 +58,7 @@ def handle_device_button_update(sender, buttonObj):
 	log.debug("Main Caught Device Button Update" + str(buttonObj))
 	mqttClient.button_update_from_hardware(buttonObj)
 
+
 if __name__ == "__main__":
 	log.info("Main")
 	options, unknown_args = grab_args()
@@ -69,17 +71,14 @@ if __name__ == "__main__":
 	mqttClient.messageEvent += handle_mqtt_message
 
 	#set up hardware
-	deviceManager = DeviceManager(log=log)
+	mock_device = MockDevice(log=log)
+	deviceManager = DeviceManager(device=mock_device, log=log)
 	deviceManager.buttonUpdateEvent += handle_device_button_update
 
 	#connect and kick off message pump
 	mqttClient.connect(host='1.tcp.ngrok.io', port=20675)
 
-	while True:
-		log.debug("Sleep Start")
-		time.sleep(10)
-		deviceManager.test_button_press({"0_0": "true"})
-		log.debug("Sleep End")
+	deviceManager.run()
 
 
 

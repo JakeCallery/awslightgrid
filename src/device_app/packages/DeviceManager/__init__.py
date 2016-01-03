@@ -1,23 +1,27 @@
 from ..utils.events import EventHandler
+import time
 
 
 class DeviceManager:
-	def __init__(self, log=None):
+	def __init__(self, device=None, log=None):
 
 		self._log = log
 		self._log.debug('Creating New Device Manager')
 
+		self._device = device
+		self._device.button_update_event += self.handle_button_update
+
 		self.buttonUpdateEvent = EventHandler(self)
 
-	def test_button_press(self, button_obj):
-		self._log.debug('Testing button press')
+	def handle_button_update(self, sender, button_obj):
 		self.buttonUpdateEvent(button_obj)
 
 	def update_button(self, button_obj):
-		self._log.debug("Updating Hardware Button to: " + str(button_obj))
-		col_row, state = button_obj.items()[0]
-		coord_list = col_row.encode('ascii', 'ignore').split("_")
-		col = coord_list[0]
-		row = coord_list[1]
-		self._log.debug("Switching Button: " + str(col) + "," + str(row) + " to: " + str(state))
+		self._device.update_button(button_obj)
 
+	def run(self):
+		while True:
+			self._log.debug("Sleep Start")
+			time.sleep(10)
+			self._device.test_button_press({"0_0": "true"})
+			self._log.debug("Sleep End")
