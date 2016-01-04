@@ -1,5 +1,5 @@
 Next up (Software):
-bring down state on connect of device
+DB not being updated when getting message from device
 reconnect on suspend (web clients)
 implement certs/keys for jac mqtt
 error messaging on web clients
@@ -39,3 +39,4 @@ Create Standalone Edison Python code
     - update shadow on button presses
     - update trellis on shadow updates
     - notify of state "sync"
+bring down state on connect of device
