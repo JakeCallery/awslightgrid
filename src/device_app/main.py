@@ -8,10 +8,9 @@ import json
 from argparse import ArgumentParser
 from packages.MQTTClient import MQTTClient
 from packages.DeviceManager import DeviceManager
-from packages.MockDevice import MockDevice
-from packages.EdisonDevice import EdisonDevice
 
 # ### SETTINGS ###
+MOCK_DEVICE = False
 ENABLE_LOGGING = True
 ENABLE_CONSOLE_LOGGING = True
 ENABLE_FILE_LOGGING = False
@@ -49,10 +48,14 @@ def grab_args():
 	return parser.parse_known_args()
 
 
-def handle_mqtt_message(sender, payload):
-	log.debug("Main Caught Message: " + str(payload))
+def handle_mqtt_status_message(sender, payload):
+	log.debug("Main Caught Status Message: " + str(payload))
 	obj = json.loads(payload)
 	deviceManager.update_button(obj['state']['desired'])
+
+
+def handle_mqtt_get_message(sender, payload):
+	log.debug("Main Caught Get Message: " + str(payload))
 
 
 def handle_device_button_update(sender, buttonObj):
@@ -69,14 +72,20 @@ if __name__ == "__main__":
 
 	#set up mqtt client
 	mqttClient = MQTTClient(log=log, mqtt_type=options.mqtt)
-	mqttClient.messageEvent += handle_mqtt_message
+	mqttClient.statusMessageEvent += handle_mqtt_status_message
+	mqttClient.getMessageEvent += handle_mqtt_get_message
 
 	#set up hardware
-	mock_device = MockDevice(log=log)
-	edison_device = EdisonDevice(4, 4, log=log)
-	edison_device.show_off_display()
-	#deviceManager = DeviceManager(device=mock_device, log=log)
-	deviceManager = DeviceManager(device=edison_device, log=log)
+	if MOCK_DEVICE:
+		from packages.MockDevice import MockDevice
+		mock_device = MockDevice(log=log)
+		deviceManager = DeviceManager(device=mock_device, log=log)
+	else:
+		from packages.EdisonDevice import EdisonDevice
+		edison_device = EdisonDevice(4, 4, log=log)
+		edison_device.show_off_display()
+		deviceManager = DeviceManager(device=edison_device, log=log)
+
 	deviceManager.buttonUpdateEvent += handle_device_button_update
 
 	#connect and kick off message pump
@@ -84,7 +93,7 @@ if __name__ == "__main__":
 
 	#run it all
 	while True:
-		if deviceManager._device == mock_device:
+		if MOCK_DEVICE:
 			time.sleep(10)
 		else:
 			time.sleep(0.03)

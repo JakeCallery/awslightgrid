@@ -8,7 +8,8 @@ class MQTTClient:
 		self._log = log
 		self._log.debug('Creating MQTTClient Obj')
 
-		self.messageEvent = EventHandler(self)
+		self.statusMessageEvent = EventHandler(self)
+		self.getMessageEvent = EventHandler(self)
 		self.connectedEvent = EventHandler(self)
 
 		if not mqtt_type:
@@ -32,7 +33,13 @@ class MQTTClient:
 
 	def _on_message(self, client, userdata, msg):
 		self._log.debug("Received message from topic: " + msg.topic + " | QoS: " + str(msg.qos) + " | Data Received: " + str(msg.payload))
-		self.messageEvent(msg.payload)
+
+		if msg.topic == 'AWSLightGrid/get':
+			self.getMessageEvent(msg.payload)
+		elif msg.topic == 'AWSLightGrid/status':
+			self.statusMessageEvent(msg.payload)
+		else:
+			self._log.debug('Unhandled message topic: ' + msg.topic + '. Ignoring...')
 
 	def connect(self, host=None, port=None):
 		self._client.connect(host, port=port)

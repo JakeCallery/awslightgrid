@@ -41,6 +41,7 @@ class EdisonDevice:
 					else:
 						self._trellis.setLED(i)
 						self._handle_button_press(i, True)
+
 			# tell the trellis to set the LEDs we requested
 			self._trellis.writeDisplay()
 
@@ -71,25 +72,30 @@ class EdisonDevice:
 			time.sleep(0.05)
 
 	def update_button(self, button_obj):
-		self._log.debug('Updating Hardware Button to: ' + str(button_obj))
-		col_row, state = button_obj.items()[0]
-		coord_list = col_row.encode('ascii', 'ignore').split("_")
-		col = int(coord_list[0])
-		row = int(coord_list[1])
-		self._log.debug("Switching Button: " + str(col) + "," + str(row) + " to: " + str(state))
+		for prop in button_obj:
+			self._log.debug('Updating Hardware Button to: ' + str(prop) + '/' + str(button_obj[prop]))
+			col_row, state = button_obj.items()[0]
+			col_row = prop
+			state = button_obj[prop]
+			coord_list = col_row.encode('ascii', 'ignore').split("_")
+			col = int(coord_list[0])
+			row = int(coord_list[1])
+			self._log.debug("Switching Button: " + str(col) + "," + str(row) + " to: " + str(state))
 
-		#handle hardware
-		index = row * self._numCols + col
-		if index < self._num_buttons:
-			if state == 'true' or state == 'True' or state is True:
-				self._log.debug('Setting LED')
-				self._trellis.setLED(index)
+			#handle hardware
+			if row < self._numRows and col < self._numCols:
+				index = row * self._numCols + col
+				self._log.debug('Updating Hardware Button to: ' + str(prop) + '/' + str(button_obj[prop]))
+				if state == 'true' or state == 'True' or state is True:
+					self._log.debug('Setting LED')
+					self._trellis.setLED(index)
+
+				else:
+					self._log.debug('Clearing LED')
+					self._trellis.clrLED(index)
+
 			else:
-				self._log.debug('Clearing LED')
-				self._trellis.clrLED(index)
+				self._log.error('Button index: ' + str(index) + ' out of range!')
 
-			self._trellis.writeDisplay()
-
-		else:
-			self._log.error('Button index: ' + str(index) + ' out of range!')
-
+		#Update final display
+		self._trellis.writeDisplay()
