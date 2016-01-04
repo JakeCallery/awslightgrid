@@ -11,6 +11,7 @@ class MQTTClient:
 		self.statusMessageEvent = EventHandler(self)
 		self.getMessageEvent = EventHandler(self)
 		self.connectedEvent = EventHandler(self)
+		self.subscribedEvent = EventHandler(self)
 
 		if not mqtt_type:
 			self._log.error('MQTT type is required')
@@ -25,11 +26,12 @@ class MQTTClient:
 
 	def _on_connect(self, client, object, flags, rc):
 		self._log.info("Subscriber Connection status code: " + str(rc) + " | Connection status: successful")
-		self._client.subscribe('AWSLightGrid/status')
 		self._client.subscribe('AWSLightGrid/get')
+		self._client.subscribe('AWSLightGrid/status')
 
 	def _on_subscribe(self, client, obj, mid, granted_qos):
 		self._log.info("Subscribed: " + str(mid) + " " + str(granted_qos) + "  data:" + str(obj))
+		self.subscribedEvent()
 
 	def _on_message(self, client, userdata, msg):
 		self._log.debug("Received message from topic: " + msg.topic + " | QoS: " + str(msg.qos) + " | Data Received: " + str(msg.payload))
@@ -58,3 +60,6 @@ class MQTTClient:
 
 		self._client.publish('AWSLightGrid/status', json.dumps(state_obj))
 
+	def request_full_shadow(self):
+		self._log.debug('Requesting Full Shadow')
+		self._client.publish('AWSLightGrid/get', 'fullshadow')

@@ -25,6 +25,8 @@ LOG_NAME = "awslightgrid_logger"
 LOG_LEVEL = logging.DEBUG
 ################
 
+first_subscribe = True
+
 log = logging.getLogger(LOG_NAME)
 if ENABLE_CONSOLE_LOGGING:
 	stdout_handler = logging.StreamHandler(sys.stdout)
@@ -63,6 +65,16 @@ def handle_device_button_update(sender, buttonObj):
 	mqttClient.button_update_from_hardware(buttonObj)
 
 
+def handle_mqtt_subscribed(sender):
+	global first_subscribe
+	if first_subscribe:
+		first_subscribe = False
+		deviceManager.start()
+
+
+def handle_device_request_full_shadow(sender):
+	mqttClient.request_full_shadow()
+
 if __name__ == "__main__":
 	log.info("Main")
 	options, unknown_args = grab_args()
@@ -74,7 +86,7 @@ if __name__ == "__main__":
 	mqttClient = MQTTClient(log=log, mqtt_type=options.mqtt)
 	mqttClient.statusMessageEvent += handle_mqtt_status_message
 	mqttClient.getMessageEvent += handle_mqtt_get_message
-
+	mqttClient.subscribedEvent += handle_mqtt_subscribed
 	#set up hardware
 	if MOCK_DEVICE:
 		from packages.MockDevice import MockDevice
@@ -87,9 +99,11 @@ if __name__ == "__main__":
 		deviceManager = DeviceManager(device=edison_device, log=log)
 
 	deviceManager.buttonUpdateEvent += handle_device_button_update
+	deviceManager.requestFullShadowEvent += handle_device_request_full_shadow
 
 	#connect and kick off message pump
 	mqttClient.connect(host='1.tcp.ngrok.io', port=20675)
+
 
 	#run it all
 	while True:

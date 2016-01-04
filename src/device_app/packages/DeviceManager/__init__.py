@@ -12,6 +12,12 @@ class DeviceManager:
 		self._device.button_update_event += self.handle_button_update
 
 		self.buttonUpdateEvent = EventHandler(self)
+		self.requestFullShadowEvent = EventHandler(self)
+
+		self._log.debug('DM Requesting full shadow')
+
+	def start(self):
+		self.requestFullShadowEvent()
 
 	def handle_button_update(self, sender, button_obj):
 		self.buttonUpdateEvent(button_obj)

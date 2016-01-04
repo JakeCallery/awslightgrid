@@ -95,6 +95,7 @@ class EdisonDevice:
 					self._trellis.clrLED(index)
 
 			else:
+				index = row * self._numCols + col
 				self._log.error('Button index: ' + str(index) + ' out of range!')
 
 		#Update final display
