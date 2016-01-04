@@ -56,10 +56,10 @@ define([
                 this.buttons = DOMUtils.getChildNodesByClassName(this.gridDivEl, "gridButton");
                 L.log('Num Buttons: ' + this.buttons.length);
 
-                for(var c = 0; c < $numCols; c++){
+                for(var r = 0; r < $numRows; r++){
                     this.buttonGrid.push([]);
-                    for(var r = 0; r < $numRows; r++){
-                        this.buttonGrid[c].push({});
+                    for(var c = 0; c < $numCols; c++){
+                        this.buttonGrid[r].push({});
                     }
                 }
 

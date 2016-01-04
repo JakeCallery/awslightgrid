@@ -1,21 +1,14 @@
 Next up (Software):
+bring down state on connect of device
 reconnect on suspend (web clients)
 implement certs/keys for jac mqtt
 error messaging on web clients
-
-Create Standalone Edison Python code
-    - catch button presses
-    - update shadow on button presses
-    - update trellis on shadow updates
-    - notify of state "sync"
 Fix CSS media queries on mobile for web client
 Add in socket reconnect after suspend
 
 Next Up (Hardware):
-Wire test trellis to Edison
-Port Raspberry pi python to edison
-test turning on and off trellis lights
-test catching trellis button presses
+Figure out what is needed for proper i2c setup from python
+    - currently needs to run i2c setup on arduino
 
 IT:
 certs and keys for jac mqtt
@@ -37,3 +30,12 @@ pass messages to socket server from jac mqtt
 set up mosquitto config file (for logging)
 DB backed "shadow" for jacmqtt
 add mosquitto config file changes to provisioning
+Wire test trellis to Edison
+Port Raspberry pi python to edison
+test turning on and off trellis lights
+test catching trellis button presses
+Create Standalone Edison Python code
+    - catch button presses
+    - update shadow on button presses
+    - update trellis on shadow updates
+    - notify of state "sync"
