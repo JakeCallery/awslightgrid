@@ -57,7 +57,15 @@ var JACMQTTClient = function($clientId, $shadowName){
         switch($topic) {
             case (shadowName + '/' + 'status'):
                 console.log('Caught Status');
-                self.emit('updatefrommqtt', JSON.parse($payload.toString()));
+                var payloadObj = JSON.parse($payload.toString());
+                for(var key in payloadObj['state']['desired']){
+                    var col = key.toString().split('_')[0];
+                    var row = key.toString().split('_')[1];
+                    var state = payloadObj['state']['desired'][key];
+                    self.updateDB(col, row, state);
+                }
+
+                self.emit('updatefrommqtt', payloadObj);
                 break;
 
             case (shadowName + '/' + 'get'):
@@ -121,7 +129,7 @@ var JACMQTTClient = function($clientId, $shadowName){
                 var statement = self.db.prepare("INSERT INTO shadow_tbl (id, state) VALUES (?,?)");
 
                 for(var i = 0; i < (8*8); i++){
-                    statement.run(i,"false");
+                    statement.run(i, "false");
                 }
 
                 //Insert
@@ -162,13 +170,7 @@ var JACMQTTClient = function($clientId, $shadowName){
         var col = parseInt(key.split('_')[0]);
         var row = parseInt(key.split('_')[1]);
         var state = stateObj.state.desired[key];
-        var id = row * 8 + col;
-        console.log('Updating: ', col, row);
-        self.db.serialize(function(){
-            self.db.run("BEGIN TRANSACTION")
-                .run("UPDATE shadow_tbl SET state = ? WHERE id = ?", [state.toString(), id])
-                .exec("COMMIT");
-        });
+        self.updateDB(col, row, state);
 
         console.log('Publish Desired Update');
         client.publish(shadowName + '/' + 'status', JSON.stringify(stateObj));
@@ -176,6 +178,16 @@ var JACMQTTClient = function($clientId, $shadowName){
 
     this.requestCurrentShadow = function(){
         client.publish(shadowName + '/' + 'get', 'fullshadow');
+    };
+
+    this.updateDB = function($col, $row, $state){
+        var id = $row * 8 + $col;
+        console.log('Updating DB: ', $col, $row, id, $state.toString());
+        self.db.serialize(function(){
+            self.db.run("BEGIN TRANSACTION")
+                .run("UPDATE shadow_tbl SET state = ? WHERE id = ?", [$state.toString(), id])
+                .exec("COMMIT");
+        });
     };
 
 };
