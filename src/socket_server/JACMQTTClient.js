@@ -181,7 +181,7 @@ var JACMQTTClient = function($clientId, $shadowName){
     };
 
     this.updateDB = function($col, $row, $state){
-        var id = $row * 8 + $col;
+        var id = parseInt($row) * 8 + parseInt($col);
         console.log('Updating DB: ', $col, $row, id, $state.toString());
         self.db.serialize(function(){
             self.db.run("BEGIN TRANSACTION")
