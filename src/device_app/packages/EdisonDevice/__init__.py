@@ -5,7 +5,7 @@ import math
 
 MOMENTARY = 0
 LATCHING = 1
-NUMTRELLIS = 1
+NUMTRELLIS = 4
 I2C_BUS = 6
 
 
@@ -16,7 +16,10 @@ class EdisonDevice:
 		self.button_update_event = EventHandler(self)
 
 		self._matrix0 = Adafruit_Trellis()
-		self._trellis = Adafruit_TrellisSet(self._matrix0)
+		self._matrix1 = Adafruit_Trellis()
+		self._matrix2 = Adafruit_Trellis()
+		self._matrix3 = Adafruit_Trellis()
+		self._trellis = Adafruit_TrellisSet(self._matrix0, self._matrix1, self._matrix2, self._matrix3)
 
 		self._num_buttons = NUMTRELLIS * num_cols * num_rows
 
@@ -24,7 +27,7 @@ class EdisonDevice:
 		self._numRows = num_rows
 
 		self._log.info('Starting Trellis')
-		self._trellis.begin((0x70, I2C_BUS))
+		self._trellis.begin((0x77, I2C_BUS), (0x72, I2C_BUS), (0x73, I2C_BUS), (0x71, I2C_BUS))
 
 	def update(self):
 		# If a button was just pressed or released...
@@ -60,6 +63,7 @@ class EdisonDevice:
 
 	def show_off_display(self):
 		# light up all the LEDs in order
+		self._log.debug('Num Buttons: ' + str(self._num_buttons))
 		for i in range(self._num_buttons):
 			self._trellis.setLED(i)
 			self._trellis.writeDisplay()
@@ -83,7 +87,7 @@ class EdisonDevice:
 			self._log.debug("Switching Button: " + str(col) + "," + str(row) + " to: " + str(state))
 
 			#handle hardware
-			if row < self._numRows and col < self._numCols:
+			if row < self._numRows * NUMTRELLIS and col < self._numCols * NUMTRELLIS:
 				index = row * self._numCols + col
 				self._log.debug('Updating Hardware Button to: ' + str(prop) + '/' + str(button_obj[prop]))
 				if state == 'true' or state == 'True' or state is True:
