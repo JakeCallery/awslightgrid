@@ -23,8 +23,9 @@ class EdisonDevice:
 
 		self._num_buttons = NUMTRELLIS * num_cols * num_rows
 
-		self._numCols = num_cols
-		self._numRows = num_rows
+		self._numBoardCols = num_cols
+		self._numBoardRows = num_rows
+		self._numBoards = NUMTRELLIS
 
 		self._log.info('Starting Trellis')
 		self._trellis.begin((0x77, I2C_BUS), (0x72, I2C_BUS), (0x73, I2C_BUS), (0x71, I2C_BUS))
@@ -48,12 +49,47 @@ class EdisonDevice:
 			# tell the trellis to set the LEDs we requested
 			self._trellis.writeDisplay()
 
+	def get_index_from_col_row(self, col, row):
+		#4,1 = 20
+		#4,4 = 48
+
+		col_board = math.floor(col / self._numBoardCols)
+		row_board = math.floor(row / self._numBoardRows)
+
+		index = col_board * self._numBoardCols * self._numBoardRows
+		index += (row_board * self._numBoardRows * self._numBoardCols)
+		index += (row * self._numBoardCols)
+
+		return int(index)
+
+	def get_col_row_from_index(self, index):
+		#21 = 5,1
+		#32 = 0,4
+		board = math.floor(index / (self._numBoardCols * self._numBoardRows))
+		remainder = index % (self._numBoardCols * self._numBoardRows)
+
+		col_add = 0
+		row_add = 0
+		if board == 1 or board == 3:
+			col_add = self._numBoardCols
+		elif board == 0 or board == 2:
+			row_add = self._numBoardRows
+
+		row = math.floor(remainder / self._numBoardCols) + row_add
+		col = (remainder % self._numBoardCols) + col_add
+
+		self._log.debug('Board,Remainder,Col,Row: ' + str(board) + ',' + str(remainder) + ',' + str(col) + ',' + str(row))
+
+		return int(col), int(row)
+
 	def _handle_button_press(self, button_index, new_state):
 		self._log.debug('handle buton press: ' + str(button_index) + ':' + str(new_state))
 
 		#convert index to button object
-		row = int(button_index / self._numCols)
-		col = int(button_index % self._numCols)
+		#row = int(button_index / self._numBoardCols)
+		#col = int(button_index % self._numBoardCols)
+		col, row = self.get_col_row_from_index(button_index)
+		self._log.debug('Col,Row' + str(col) + ',' + str(row))
 		prop_str = str(col) + '_' + str(row)
 		button_obj = dict()
 		button_obj[prop_str] = new_state
@@ -67,13 +103,13 @@ class EdisonDevice:
 		for i in range(self._num_buttons):
 			self._trellis.setLED(i)
 			self._trellis.writeDisplay()
-			time.sleep(0.05)
+			time.sleep(0.002)
 
 		# then turn them off
 		for i in range(self._num_buttons):
 			self._trellis.clrLED(i)
 			self._trellis.writeDisplay()
-			time.sleep(0.05)
+			time.sleep(0.002)
 
 	def update_button(self, button_obj):
 		for prop in button_obj:
@@ -87,8 +123,9 @@ class EdisonDevice:
 			self._log.debug("Switching Button: " + str(col) + "," + str(row) + " to: " + str(state))
 
 			#handle hardware
-			if row < self._numRows * NUMTRELLIS and col < self._numCols * NUMTRELLIS:
-				index = row * self._numCols + col
+			if row < self._numBoardRows * NUMTRELLIS and col < self._numBoardCols * NUMTRELLIS:
+				index = self.get_index_from_col_row(col, row)
+				self._log.debug('Index: ' + str(index))
 				self._log.debug('Updating Hardware Button to: ' + str(prop) + '/' + str(button_obj[prop]))
 				if state == 'true' or state == 'True' or state is True:
 					self._log.debug('Setting LED')
@@ -99,7 +136,7 @@ class EdisonDevice:
 					self._trellis.clrLED(index)
 
 			else:
-				index = row * self._numCols + col
+				index = row * self._numBoardCols + col
 				self._log.error('Button index: ' + str(index) + ' out of range!')
 
 		#Update final display

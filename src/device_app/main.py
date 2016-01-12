@@ -82,7 +82,7 @@ if __name__ == "__main__":
 	global mqttClient
 	global deviceManager
 
-	#set up mqtt client
+	# #set up mqtt client
 	mqttClient = MQTTClient(log=log, mqtt_type=options.mqtt)
 	mqttClient.statusMessageEvent += handle_mqtt_status_message
 	mqttClient.getMessageEvent += handle_mqtt_get_message
