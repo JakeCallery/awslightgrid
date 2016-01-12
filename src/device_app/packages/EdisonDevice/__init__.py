@@ -53,6 +53,11 @@ class EdisonDevice:
 		#4,1 = 20
 		#4,4 = 48
 
+		#####################################################################
+		#TODO: 0,7 and 1,7 both end up with and index of 44!!
+		#####################################################################
+
+
 		col_board = math.floor(col / self._numBoardCols)
 		row_board = math.floor(row / self._numBoardRows)
 
@@ -65,6 +70,7 @@ class EdisonDevice:
 	def get_col_row_from_index(self, index):
 		#21 = 5,1
 		#32 = 0,4
+
 		board = math.floor(index / (self._numBoardCols * self._numBoardRows))
 		remainder = index % (self._numBoardCols * self._numBoardRows)
 
