@@ -7,7 +7,7 @@ MOMENTARY = 0
 LATCHING = 1
 NUMTRELLIS = 4
 I2C_BUS = 6
-
+INDEX_OFFSET_MAP = [[0, 32], [16, 48]]
 
 class EdisonDevice:
 	def __init__(self, num_cols, num_rows, log=None):
@@ -52,26 +52,30 @@ class EdisonDevice:
 	def get_index_from_col_row(self, col, row):
 		#4,1 = 20
 		#4,4 = 48
+		col_board = None
+		row_board = None
 
-		quad = 1 * col * row + 2 * (1 - col) * row + 3 * (1 - col) * (1 - row) + 4 * col * (1 - row)
-		base_index = (quad - 1) * 16
-		index = base_index + (col % self._numBoardCols) + ((row % self._numBoardRows) * self._numBoardCols)
-		self._log.debug("Quad, Base, Index: " + str(quad) + "," + str(base_index) + "," + str(index))
+		if col >= 4:
+			col_board = 1
+		else:
+			col_board = 0
+
+		if row >= 4:
+			row_board = 1
+		else:
+			row_board = 0
+
+		index_offset = INDEX_OFFSET_MAP[col_board][row_board]
+		self._log.debug("Offset, colb, rowb" + str(index_offset) + "," + str(col_board) + "," + str(row_board))
+
+		base_col = col % self._numBoardCols
+		base_row = row % self._numBoardRows
+
+		index = index_offset + (base_row * self._numBoardCols) + base_col
+
+		self._log.debug("INDEX: " + str(index))
+
 		return int(index)
-
-		# #####################################################################
-		# #TODO: 0,7 and 1,7 both end up with and index of 44!!
-		# #####################################################################
-		#
-		#
-		# col_board = math.floor(col / self._numBoardCols)
-		# row_board = math.floor(row / self._numBoardRows)
-		#
-		# index = col_board * self._numBoardCols * self._numBoardRows
-		# index += (row_board * self._numBoardRows * self._numBoardCols)
-		# index += (row * self._numBoardCols)
-
-		#return int(index)
 
 	def get_col_row_from_index(self, index):
 		#21 = 5,1
@@ -82,9 +86,12 @@ class EdisonDevice:
 
 		col_add = 0
 		row_add = 0
-		if board == 1 or board == 3:
+		if board == 1:
 			col_add = self._numBoardCols
-		elif board == 0 or board == 2:
+		elif board == 2:
+			row_add = self._numBoardRows
+		elif board == 3:
+			col_add = self._numBoardCols
 			row_add = self._numBoardRows
 
 		row = math.floor(remainder / self._numBoardCols) + row_add
@@ -96,10 +103,6 @@ class EdisonDevice:
 
 	def _handle_button_press(self, button_index, new_state):
 		self._log.debug('handle buton press: ' + str(button_index) + ':' + str(new_state))
-
-		#convert index to button object
-		#row = int(button_index / self._numBoardCols)
-		#col = int(button_index % self._numBoardCols)
 		col, row = self.get_col_row_from_index(button_index)
 		self._log.debug('Col,Row' + str(col) + ',' + str(row))
 		prop_str = str(col) + '_' + str(row)
@@ -126,7 +129,6 @@ class EdisonDevice:
 	def update_button(self, button_obj):
 		for prop in button_obj:
 			self._log.debug('Updating Hardware Button to: ' + str(prop) + '/' + str(button_obj[prop]))
-			col_row, state = button_obj.items()[0]
 			col_row = prop
 			state = button_obj[prop]
 			coord_list = col_row.encode('ascii', 'ignore').split("_")
