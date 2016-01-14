@@ -53,19 +53,25 @@ class EdisonDevice:
 		#4,1 = 20
 		#4,4 = 48
 
-		#####################################################################
-		#TODO: 0,7 and 1,7 both end up with and index of 44!!
-		#####################################################################
-
-
-		col_board = math.floor(col / self._numBoardCols)
-		row_board = math.floor(row / self._numBoardRows)
-
-		index = col_board * self._numBoardCols * self._numBoardRows
-		index += (row_board * self._numBoardRows * self._numBoardCols)
-		index += (row * self._numBoardCols)
-
+		quad = 1 * col * row + 2 * (1 - col) * row + 3 * (1 - col) * (1 - row) + 4 * col * (1 - row)
+		base_index = (quad - 1) * 16
+		index = base_index + (col % self._numBoardCols) + ((row % self._numBoardRows) * self._numBoardCols)
+		self._log.debug("Quad, Base, Index: " + str(quad) + "," + str(base_index) + "," + str(index))
 		return int(index)
+
+		# #####################################################################
+		# #TODO: 0,7 and 1,7 both end up with and index of 44!!
+		# #####################################################################
+		#
+		#
+		# col_board = math.floor(col / self._numBoardCols)
+		# row_board = math.floor(row / self._numBoardRows)
+		#
+		# index = col_board * self._numBoardCols * self._numBoardRows
+		# index += (row_board * self._numBoardRows * self._numBoardCols)
+		# index += (row * self._numBoardCols)
+
+		#return int(index)
 
 	def get_col_row_from_index(self, index):
 		#21 = 5,1
