@@ -4,15 +4,15 @@ web_addr: 0.0.0.0:4040
 log: /var/log/ngrok.log
 
 tunnels:
-#  webclient:
-#    proto: http
-#    addr: 8080
-#    subdomain: awslightgrid
+  webclient:
+    proto: http
+    addr: 8080
+    hostname: awslightgrid.jakecallery.com
 
-#  socketclient:
-#    proto: tcp
-#    addr: 5252
-#    remote_addr: 1.tcp.ngrok.io:20674
+  socketclient:
+    proto: tcp
+    addr: 5252
+    remote_addr: 1.tcp.ngrok.io:20674
 
   jacmqtt:
     proto: tcp

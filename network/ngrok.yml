@@ -7,7 +7,7 @@ tunnels:
   webclient:
     proto: http
     addr: 8080
-    subdomain: awslightgrid
+    hostname: awslightgrid.jakecallery.com
 
   socketclient:
     proto: tcp
