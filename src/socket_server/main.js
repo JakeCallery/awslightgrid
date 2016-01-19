@@ -2,13 +2,7 @@
 process.title = "LBSocketServer";
 
 //handle args
-var parseArgs = require('minimist');
-var parseArgsOpts = {};
-parseArgsOpts.default = true;
-//var argv = parseArgs(process.argv, parseArgsOpts);
-var argv = {};
-argv['mqtt'] = 'jac';
-
+var argv = require('yargs').argv;
 //Create Socket SErver
 var LGSocketServer = require('./LGSocketServer.js');
 var lgss = new LGSocketServer('LGSocketServer');
