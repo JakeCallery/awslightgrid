@@ -6,7 +6,8 @@ import time
 import json
 
 from argparse import ArgumentParser
-from packages.MQTTClient import MQTTClient
+from packages.JACMQTTClient import JACMQTTClient
+from packages.AWSMQTTClient import AWSMQTTClient
 from packages.DeviceManager import DeviceManager
 
 # ### SETTINGS ###
@@ -53,7 +54,7 @@ def grab_args():
 def handle_mqtt_status_message(sender, payload):
 	log.debug("Main Caught Status Message: " + str(payload))
 	obj = json.loads(payload)
-	deviceManager.update_button(obj['state']['desired'])
+	deviceManager.update_button(obj['state']['reported'])
 
 
 def handle_mqtt_get_message(sender, payload):
@@ -83,10 +84,15 @@ if __name__ == "__main__":
 	global deviceManager
 
 	# #set up mqtt client
-	mqttClient = MQTTClient(log=log, mqtt_type=options.mqtt)
+	if options.mqtt == 'jac':
+		mqttClient = JACMQTTClient(log=log)
+	elif options.mqtt == 'aws':
+		mqttClient = AWSMQTTClient(log=log)
+
 	mqttClient.statusMessageEvent += handle_mqtt_status_message
 	mqttClient.getMessageEvent += handle_mqtt_get_message
 	mqttClient.subscribedEvent += handle_mqtt_subscribed
+
 	#set up hardware
 	if MOCK_DEVICE:
 		from packages.MockDevice import MockDevice
@@ -102,7 +108,10 @@ if __name__ == "__main__":
 	deviceManager.requestFullShadowEvent += handle_device_request_full_shadow
 
 	#connect and kick off message pump
-	mqttClient.connect(host='1.tcp.ngrok.io', port=20675)
+	if options.mqtt == 'jac':
+		mqttClient.connect(host='1.tcp.ngrok.io', port=20675)
+	elif options.mqtt == 'aws':
+		mqttClient.connect(host='A330MM7RATC5K1.iot.us-east-1.amazonaws.com', port=8883)
 
 
 	#run it all
