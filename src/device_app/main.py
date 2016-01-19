@@ -59,6 +59,7 @@ def handle_mqtt_status_message(sender, payload):
 
 def handle_mqtt_get_message(sender, payload):
 	log.debug("Main Caught Get Message: " + str(payload))
+	#TODO: update device from full shadow
 
 
 def handle_device_button_update(sender, buttonObj):

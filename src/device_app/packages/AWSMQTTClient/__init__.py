@@ -14,6 +14,7 @@ class AWSMQTTClient:
 		self.subscribedEvent = EventHandler(self)
 
 		self._log.info('Creating AWS MQTT Client')
+		self._subscribeCount = 0
 
 		self._client = mqtt.Client()
 		self._client.tls_set("awsCerts/root-CA.crt",
@@ -37,12 +38,20 @@ class AWSMQTTClient:
 
 	def _on_subscribe(self, client, obj, mid, granted_qos):
 		self._log.info("Subscribed: " + str(mid) + " " + str(granted_qos) + "  data:" + str(obj))
-		self.subscribedEvent()
+
+		self._log.debug('Subscribe Count: ' + str(self._subscribeCount))
+
+		if self._subscribeCount >= 5:
+			self.subscribedEvent()
+		else:
+			self._subscribeCount += 1
+
+
 
 	def _on_message(self, client, userdata, msg):
 		self._log.debug("-------- Received message from topic: " + msg.topic + " | QoS: " + str(msg.qos) + " | Data Received: " + str(msg.payload))
 
-		if msg.topic == '$aws/things/AWSLightGrid/shadow/get':
+		if msg.topic == '$aws/things/AWSLightGrid/shadow/get/accepted':
 			self.getMessageEvent(msg.payload)
 		elif msg.topic == '$aws/things/AWSLightGrid/shadow/update/accepted':
 			self.statusMessageEvent(msg.payload)
@@ -70,4 +79,4 @@ class AWSMQTTClient:
 
 	def request_full_shadow(self):
 		self._log.debug('Requesting Full Shadow')
-		self._client.publish('$aws/things/AWSLightGrid/shadow/get', 'fullshadow')
+		self._client.publish('$aws/things/AWSLightGrid/shadow/get', '')
