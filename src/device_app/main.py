@@ -54,13 +54,25 @@ def grab_args():
 def handle_mqtt_status_message(sender, payload):
 	log.debug("Main Caught Status Message: " + str(payload))
 	obj = json.loads(payload)
-	deviceManager.update_button(obj['state']['reported'])
+	if obj["clientToken"] != mqttClient.client_token:
+		deviceManager.update_button(obj['state']['reported'])
+	else:
+		log.debug("I sent that update, ignoring...")
 
 
 def handle_mqtt_get_message(sender, payload):
 	log.debug("Main Caught Get Message: " + str(payload))
-	#TODO: update device from full shadow
-
+	obj = json.loads(payload)
+	log.debug("OBJ: " + str(obj))
+	deviceManager.update_button(obj["state"]["reported"])
+	if "desired" in obj["state"] and len(obj["state"]["desired"]) > 0:
+		log.debug("Setting Desired Buttons")
+		deviceManager.update_button(obj["state"]["desired"], notify_of_update=False)
+	else:
+		log.debug("No Desired Object")
+	#TODO: report full state
+	button_dict = deviceManager.get_button_dict()
+	mqttClient.report_button_dict(button_dict)
 
 def handle_device_button_update(sender, buttonObj):
 	log.debug("Main Caught Device Button Update" + str(buttonObj))

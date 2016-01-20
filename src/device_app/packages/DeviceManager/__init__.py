@@ -22,8 +22,11 @@ class DeviceManager:
 	def handle_button_update(self, sender, button_obj):
 		self.buttonUpdateEvent(button_obj)
 
-	def update_button(self, button_obj):
-		self._device.update_button(button_obj)
+	def update_button(self, button_obj, notify_of_update=True):
+		self._device.update_button(button_obj, notify_of_update=notify_of_update)
+
+	def get_button_dict(self):
+		return self._device.get_button_dict()
 
 	def update(self):
 		self._device.update()

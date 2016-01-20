@@ -50,11 +50,6 @@ class EdisonDevice:
 			self._trellis.writeDisplay()
 
 	def get_index_from_col_row(self, col, row):
-		#4,1 = 20
-		#4,4 = 48
-		col_board = None
-		row_board = None
-
 		if col >= 4:
 			col_board = 1
 		else:
@@ -78,9 +73,6 @@ class EdisonDevice:
 		return int(index)
 
 	def get_col_row_from_index(self, index):
-		#21 = 5,1
-		#32 = 0,4
-
 		board = math.floor(index / (self._numBoardCols * self._numBoardRows))
 		remainder = index % (self._numBoardCols * self._numBoardRows)
 
@@ -126,7 +118,7 @@ class EdisonDevice:
 			self._trellis.writeDisplay()
 			time.sleep(0.002)
 
-	def update_button(self, button_obj):
+	def update_button(self, button_obj, notify_of_update=True):
 		for prop in button_obj:
 			self._log.debug('Updating Hardware Button to: ' + str(prop) + '/' + str(button_obj[prop]))
 			col_row = prop
@@ -155,3 +147,12 @@ class EdisonDevice:
 
 		#Update final display
 		self._trellis.writeDisplay()
+
+	def get_button_dict(self):
+		obj = dict()
+		for i in range(self._num_buttons):
+			col, row = self.get_col_row_from_index(i)
+			key_string = str(col) + "_" + str(row)
+			obj[key_string] = self._trellis.isLED(i)
+
+		return obj
