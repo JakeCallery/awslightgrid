@@ -10,6 +10,7 @@ class AWSMQTTClient:
 		self._log = log
 
 		self.statusMessageEvent = EventHandler(self)
+		self.deltaMessageEvent = EventHandler(self)
 		self.getMessageEvent = EventHandler(self)
 		self.connectedEvent = EventHandler(self)
 		self.subscribedEvent = EventHandler(self)
@@ -55,13 +56,23 @@ class AWSMQTTClient:
 
 		if msg.topic == '$aws/things/AWSLightGrid/shadow/get/accepted':
 			self.getMessageEvent(msg.payload)
-		elif msg.topic == '$aws/things/AWSLightGrid/shadow/update/accepted':
+
+		# elif msg.topic == '$aws/things/AWSLightGrid/shadow/update/accepted':
+		# 	obj = json.loads(msg.payload)
+		# 	if int(obj["version"]) > self._currentVersion:
+		# 		self._currentVersion = int(obj["version"])
+		# 		self.statusMessageEvent(msg.payload)
+		# 	else:
+		# 		self._log.info("State from old version, ignoring...")
+
+		elif msg.topic == '$aws/things/AWSLightGrid/shadow/update/delta':
 			obj = json.loads(msg.payload)
+			self._log.debug("Versions: " + str(int(obj["version"])) + "/" + str(self._currentVersion))
 			if int(obj["version"]) > self._currentVersion:
 				self._currentVersion = int(obj["version"])
-				self.statusMessageEvent(msg.payload)
+				self.deltaMessageEvent(msg.payload)
 			else:
-				self._log.info("State from old version, ignoring...")
+				self._log.info("Delta from old version, ignoring...")
 		else:
 			self._log.debug('Unhandled message topic: ' + msg.topic + '. Ignoring...')
 			self._log.debug('Ignored message: ' + str(msg.payload))
@@ -94,7 +105,7 @@ class AWSMQTTClient:
 			"state": {
 				"reported": button_dict
 			},
-			"clientToken": "DeviceAWSMQTTClient"
+			"clientToken": CLIENT_TOKEN
 		}
 
 		self._client.publish('$aws/things/AWSLightGrid/shadow/update', json.dumps(state_obj))

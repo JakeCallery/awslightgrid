@@ -39,9 +39,9 @@ var AWSMQTTClient = function ($clientId, $shadowName){
         console.log('MQTT offline');
     });
 
-    //thingShadows.on('message', function($topic, $payload){
-    //    console.log('Message: ', $topic, $payload.toString());
-    //});
+    thingShadows.on('message', function($topic, $payload){
+        console.log('Message: ', $topic, $payload.toString());
+    });
 
     thingShadows.on('status', function($thingName, $stat, $clientToken, $stateObject) {
         console.log('ClientToken: ' + $clientToken);
@@ -55,10 +55,10 @@ var AWSMQTTClient = function ($clientId, $shadowName){
         }
     });
 
-    //thingShadows.on('delta', function($thingName, $stateObject) {
-    //    console.log('received delta on ' + $thingName + ': '+ JSON.stringify($stateObject));
-    //    self.emit('deltafrommqtt', $stateObject);
-    //});
+    thingShadows.on('delta', function($thingName, $stateObject) {
+        console.log('received delta on ' + $thingName + ': '+ JSON.stringify($stateObject));
+        self.emit('deltafrommqtt', $stateObject);
+    });
 
     thingShadows.on('timeout', function($thingName, $clientToken) {
         console.warn( 'timeout: ' + $thingName + ', clientToken=' + $clientToken);

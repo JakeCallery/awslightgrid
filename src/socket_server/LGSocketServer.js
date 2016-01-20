@@ -41,6 +41,26 @@ var LGSocketServer = function ($id){
         console.log('Update From MQTT:');
         console.log($data);
 
+        //set reported
+        for(var reportedBtn in $data.state.reported) {
+            var reportedCol = reportedBtn.split('_')[0];
+            var reportedRow = reportedBtn.split('_')[1];
+            var reportedState = $data.state.reported[reportedBtn];
+            var reportedMsg = {};
+            reportedMsg.messageType = 'btnupd';
+            reportedMsg.dataType = 'utf8';
+            reportedMsg.data = {
+                col:reportedCol,
+                row:reportedRow,
+                state:reportedState
+            };
+
+            for(var j = 0; j < self.clients.length; j++){
+                self.clients[j].sendMessage(reportedMsg, JSON.stringify(reportedMsg));
+            }
+        }
+
+        //set desired
         for(var btn in $data.state.desired) {
             var col = btn.split('_')[0];
             var row = btn.split('_')[1];

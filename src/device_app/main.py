@@ -51,10 +51,29 @@ def grab_args():
 	return parser.parse_known_args()
 
 
+def handle_mqtt_delta_message(sender, payload):
+	log.debug("Main Caught Delta Message: " + str(payload))
+	obj = json.loads(payload)
+	if "clientToken" not in obj or obj["clientToken"] != mqttClient.client_token:
+		if len(obj["state"]) > 0:
+			log.debug("Handling Delta update")
+			deviceManager.update_button(obj['state'])
+			mqttClient.report_button_dict(obj['state'])
+		if "desired" in obj["state"]:
+			log.debug("Handling Desired State Change")
+			deviceManager.update_button(obj['state']['desired'])
+
+		if "reported" in obj["state"]:
+			log.debug("Handling Reported State Change")
+			deviceManager.update_button(obj['state']['reported'])
+	else:
+		log.debug("I sent that update, ignoring...")
+
+
 def handle_mqtt_status_message(sender, payload):
 	log.debug("Main Caught Status Message: " + str(payload))
 	obj = json.loads(payload)
-	if obj["clientToken"] != mqttClient.client_token:
+	if "clientToken" not in obj or obj["clientToken"] != mqttClient.client_token:
 		if "desired" in obj["state"]:
 			log.debug("Handling Desired State Change")
 			deviceManager.update_button(obj['state']['desired'])
@@ -109,6 +128,7 @@ if __name__ == "__main__":
 		mqttClient = AWSMQTTClient(log=log)
 
 	mqttClient.statusMessageEvent += handle_mqtt_status_message
+	mqttClient.deltaMessageEvent += handle_mqtt_delta_message
 	mqttClient.getMessageEvent += handle_mqtt_get_message
 	mqttClient.subscribedEvent += handle_mqtt_subscribed
 
