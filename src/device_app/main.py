@@ -55,7 +55,13 @@ def handle_mqtt_status_message(sender, payload):
 	log.debug("Main Caught Status Message: " + str(payload))
 	obj = json.loads(payload)
 	if obj["clientToken"] != mqttClient.client_token:
-		deviceManager.update_button(obj['state']['reported'])
+		if "desired" in obj["state"]:
+			log.debug("Handling Desired State Change")
+			deviceManager.update_button(obj['state']['desired'])
+
+		if "reported" in obj["state"]:
+			log.debug("Handling Reported State Change")
+			deviceManager.update_button(obj['state']['reported'])
 	else:
 		log.debug("I sent that update, ignoring...")
 
