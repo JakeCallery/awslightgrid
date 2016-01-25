@@ -5,6 +5,7 @@ from ..utils.events import EventHandler
 
 CLIENT_TOKEN = "DeviceAWSMQTTClient"
 
+
 class AWSMQTTClient:
 	def __init__(self, log=None):
 		self._log = log

@@ -5,6 +5,7 @@
 var util = require('util');
 var Events = require('events');
 var awsIoT = require('aws-iot-device-sdk');
+var sleep = require('sleep');
 
 var AWSMQTTClient = function ($clientId, $shadowName){
 
@@ -22,15 +23,19 @@ var AWSMQTTClient = function ($clientId, $shadowName){
 
     thingShadows.on('connect', function(){
         console.log('MQTT Connected');
-        thingShadows.register($shadowName, { persistentSubscribe: true });
+        console.log('Registering Shadow: ' + $shadowName);
+        thingShadows.register($shadowName, {discardStale:false});
+        sleep.sleep(3);
+        console.log('Sleep over...');
     });
 
     thingShadows.on('reconnect', function() {
-        thingShadows.register( $shadowName, { persistentSubscribe: true } );
+        thingShadows.register($shadowName);
         console.log('MQTT reconnect');
     });
 
     thingShadows.on('close', function() {
+        console.log('Unregistering Shadow');
         thingShadows.unregister($shadowName);
         console.log('MQTT caught close');
     });
@@ -44,6 +49,7 @@ var AWSMQTTClient = function ($clientId, $shadowName){
     });
 
     thingShadows.on('status', function($thingName, $stat, $clientToken, $stateObject) {
+        console.log('---- STATUS ----');
         console.log('ClientToken: ' + $clientToken);
         console.log('received ' + $stat + ' on '+ $thingName +': '+ JSON.stringify($stateObject));
 
@@ -61,7 +67,7 @@ var AWSMQTTClient = function ($clientId, $shadowName){
     });
 
     thingShadows.on('timeout', function($thingName, $clientToken) {
-        console.warn( 'timeout: ' + $thingName + ', clientToken=' + $clientToken);
+        console.log('timeout: ' + $thingName + ', clientToken=' + $clientToken);
     });
 
     this.updateDesired = function($col, $row, $state){

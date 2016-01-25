@@ -9,6 +9,7 @@ NUMTRELLIS = 4
 I2C_BUS = 6
 INDEX_OFFSET_MAP = [[0, 32], [16, 48]]
 
+
 class EdisonDevice:
 	def __init__(self, num_cols, num_rows, log=None):
 		self._log = log

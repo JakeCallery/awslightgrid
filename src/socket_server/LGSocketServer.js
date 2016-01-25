@@ -39,7 +39,7 @@ var LGSocketServer = function ($id){
 
     this.updateFromMQTT = function($data){
         console.log('Update From MQTT:');
-        console.log($data);
+        //console.log($data);
 
         //set reported
         for(var reportedBtn in $data.state.reported) {
