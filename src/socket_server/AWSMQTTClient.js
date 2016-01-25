@@ -17,7 +17,6 @@ var AWSMQTTClient = function ($clientId, $shadowName){
         keyPath: './awsCerts/private.pem.key',
         certPath: './awsCerts/certificate.pem.crt',
         caPath: './awsCerts/root-CA.crt',
-        clientId: $clientId,
         region: 'us-east-1'
     });
 

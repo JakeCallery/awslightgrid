@@ -54,35 +54,29 @@ def grab_args():
 def handle_mqtt_delta_message(sender, payload):
 	log.debug("Main Caught Delta Message: " + str(payload))
 	obj = json.loads(payload)
-	if "clientToken" not in obj or obj["clientToken"] != mqttClient.client_token:
-		if len(obj["state"]) > 0:
-			log.debug("Handling Delta update")
-			deviceManager.update_button(obj['state'])
-			mqttClient.report_button_dict(obj['state'])
-		if "desired" in obj["state"]:
-			log.debug("Handling Desired State Change")
-			deviceManager.update_button(obj['state']['desired'])
+	if len(obj["state"]) > 0:
+		log.debug("Handling Delta update")
+		deviceManager.update_button(obj['state'])
+		mqttClient.report_button_dict(obj['state'])
+	if "desired" in obj["state"]:
+		log.debug("Handling Desired State Change")
+		deviceManager.update_button(obj['state']['desired'])
 
-		if "reported" in obj["state"]:
-			log.debug("Handling Reported State Change")
-			deviceManager.update_button(obj['state']['reported'])
-	else:
-		log.debug("I sent that update, ignoring...")
+	if "reported" in obj["state"]:
+		log.debug("Handling Reported State Change")
+		deviceManager.update_button(obj['state']['reported'])
 
 
 def handle_mqtt_status_message(sender, payload):
 	log.debug("Main Caught Status Message: " + str(payload))
 	obj = json.loads(payload)
-	if "clientToken" not in obj or obj["clientToken"] != mqttClient.client_token:
-		if "desired" in obj["state"]:
-			log.debug("Handling Desired State Change")
-			deviceManager.update_button(obj['state']['desired'])
+	if "desired" in obj["state"]:
+		log.debug("Handling Desired State Change")
+		deviceManager.update_button(obj['state']['desired'])
 
-		if "reported" in obj["state"]:
-			log.debug("Handling Reported State Change")
-			deviceManager.update_button(obj['state']['reported'])
-	else:
-		log.debug("I sent that update, ignoring...")
+	if "reported" in obj["state"]:
+		log.debug("Handling Reported State Change")
+		deviceManager.update_button(obj['state']['reported'])
 
 
 def handle_mqtt_get_message(sender, payload):
