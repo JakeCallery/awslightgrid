@@ -4,7 +4,7 @@ from ..utils.events import EventHandler
 
 
 class JACMQTTClient:
-	def __init__(self, log=None, mqtt_type=None):
+	def __init__(self, log=None):
 		self._log = log
 		self._log.debug('Creating MQTTClient Obj')
 
@@ -12,10 +12,7 @@ class JACMQTTClient:
 		self.getMessageEvent = EventHandler(self)
 		self.connectedEvent = EventHandler(self)
 		self.subscribedEvent = EventHandler(self)
-
-		if not mqtt_type:
-			self._log.error('MQTT type is required')
-			raise ValueError("MQTT Type is required (aws,jac)")
+		self.deltaMessageEvent = EventHandler(self)
 
 		self._log.info('Creating JAC MQTT Client')
 
@@ -37,7 +34,8 @@ class JACMQTTClient:
 		self._log.debug("Received message from topic: " + msg.topic + " | QoS: " + str(msg.qos) + " | Data Received: " + str(msg.payload))
 
 		if msg.topic == 'AWSLightGrid/get':
-			self.getMessageEvent(msg.payload)
+			if str(msg.payload) != 'fullshadow':
+				self.getMessageEvent(msg.payload)
 		elif msg.topic == 'AWSLightGrid/status':
 			self.statusMessageEvent(msg.payload)
 		else:
