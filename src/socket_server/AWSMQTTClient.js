@@ -7,67 +7,95 @@ var Events = require('events');
 var awsIoT = require('aws-iot-device-sdk');
 var sleep = require('sleep');
 
+var UPDATE_TOPIC = '$aws/things/AWSLightGrid/shadow/update';
+var UPDATE_ACCEPTED_TOPIC = '$aws/things/AWSLightGrid/shadow/update/accepted';
+var GET_ACCEPTED_TOPIC = '$aws/things/AWSLightGrid/shadow/get/accepted';
+var UPDATE_REJECTED_TOPIC = '$aws/things/AWSLightGrid/shadow/update/rejected';
+var GET_REJECTED_TOPIC = '$aws/things/AWSLightGrid/shadow/get/rejected';
+var DELTA_TOPIC = '$aws/things/AWSLightGrid/shadow/update/delta';
+
 var AWSMQTTClient = function ($clientId, $shadowName){
 
     var self = this;
     var shadowName = $shadowName;
     var clientTokenUpdate;
 
-    var thingShadows = awsIoT.thingShadow({
+    var device = awsIoT.device({
         keyPath: './awsCerts/private.pem.key',
         certPath: './awsCerts/certificate.pem.crt',
         caPath: './awsCerts/root-CA.crt',
+        clientId: 'SocketServerDevice',
         region: 'us-east-1'
     });
 
-    thingShadows.on('connect', function(){
+    device.on('connect', function(){
         console.log('MQTT Connected');
-        console.log('Registering Shadow: ' + $shadowName);
-        thingShadows.register($shadowName, {discardStale:false});
-        sleep.sleep(3);
-        console.log('Sleep over...');
+        console.log('Subscribing...');
+        device.subscribe(UPDATE_ACCEPTED_TOPIC);
+        device.subscribe(GET_ACCEPTED_TOPIC);
+        device.subscribe(UPDATE_REJECTED_TOPIC);
+        device.subscribe(GET_REJECTED_TOPIC);
+        device.subscribe(DELTA_TOPIC);
+
+        console.log('Subscribe Complete');
     });
 
-    thingShadows.on('reconnect', function() {
-        thingShadows.register($shadowName);
-        console.log('MQTT reconnect');
+    device.on('reconnect', function() {
+        console.log('MQTT reconnecting...');
     });
 
-    thingShadows.on('close', function() {
-        console.log('Unregistering Shadow');
-        thingShadows.unregister($shadowName);
+    device.on('close', function() {
         console.log('MQTT caught close');
     });
 
-    thingShadows.on('offline', function() {
+    device.on('offline', function() {
         console.log('MQTT offline');
     });
 
-    thingShadows.on('message', function($topic, $payload){
+    device.on('message', function($topic, $payload){
         console.log('Message: ', $topic, $payload.toString());
-    });
 
-    thingShadows.on('status', function($thingName, $stat, $clientToken, $stateObject) {
-        console.log('---- STATUS ----');
-        console.log('ClientToken: ' + $clientToken);
-        console.log('received ' + $stat + ' on '+ $thingName +': '+ JSON.stringify($stateObject));
+        switch($topic) {
+            case UPDATE_ACCEPTED_TOPIC:
+                console.log('Caught Update Accepted');
+                break;
 
-        if($stat == 'accepted'){
-            console.log('Caught accepted');
-            self.emit('updatefrommqtt', $stateObject);
-        } else if ($stat == 'rejected'){
-            console.log('--- Caught rejected ---');
+            case GET_ACCEPTED_TOPIC:
+                console.log('Caught Get Accepted');
+                break;
+
+            case DELTA_TOPIC:
+                console.log('Caught Delta Topic');
+                break;
+
+            default:
+                console.log('Caught Unhandled Topic Message');
         }
+
+
     });
 
-    thingShadows.on('delta', function($thingName, $stateObject) {
-        console.log('received delta on ' + $thingName + ': '+ JSON.stringify($stateObject));
-        self.emit('deltafrommqtt', $stateObject);
-    });
-
-    thingShadows.on('timeout', function($thingName, $clientToken) {
-        console.log('timeout: ' + $thingName + ', clientToken=' + $clientToken);
-    });
+    //thingShadows.on('status', function($thingName, $stat, $clientToken, $stateObject) {
+    //    console.log('---- STATUS ----');
+    //    console.log('ClientToken: ' + $clientToken);
+    //    console.log('received ' + $stat + ' on '+ $thingName +': '+ JSON.stringify($stateObject));
+    //
+    //    if($stat == 'accepted'){
+    //        console.log('Caught accepted');
+    //        self.emit('updatefrommqtt', $stateObject);
+    //    } else if ($stat == 'rejected'){
+    //        console.log('--- Caught rejected ---');
+    //    }
+    //});
+    //
+    //thingShadows.on('delta', function($thingName, $stateObject) {
+    //    console.log('received delta on ' + $thingName + ': '+ JSON.stringify($stateObject));
+    //    self.emit('deltafrommqtt', $stateObject);
+    //});
+    //
+    //thingShadows.on('timeout', function($thingName, $clientToken) {
+    //    console.log('timeout: ' + $thingName + ', clientToken=' + $clientToken);
+    //});
 
     this.updateDesired = function($col, $row, $state){
         var objName = $col + '_' + $row;
@@ -83,11 +111,11 @@ var AWSMQTTClient = function ($clientId, $shadowName){
         stateObj.state.desired[objName] = $state;
 
         console.log('Sending Desired Update: ' + JSON.stringify(stateObj));
-        thingShadows.update(shadowName, stateObj);
+        device.publish(UPDATE_TOPIC, stateObj);
     };
 
     this.requestCurrentShadow = function(){
-        thingShadows.get(shadowName);
+        //thingShadows.get(shadowName);
     };
 
 };

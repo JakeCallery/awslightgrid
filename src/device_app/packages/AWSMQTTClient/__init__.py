@@ -3,6 +3,8 @@ import ssl
 import json
 from ..utils.events import EventHandler
 
+CLIENT_TOKEN = "DeviceAWSMQTTClient"
+
 
 class AWSMQTTClient:
 	def __init__(self, log=None):
@@ -13,6 +15,8 @@ class AWSMQTTClient:
 		self.getMessageEvent = EventHandler(self)
 		self.connectedEvent = EventHandler(self)
 		self.subscribedEvent = EventHandler(self)
+
+		self.client_token = CLIENT_TOKEN
 
 		self._log.info('Creating AWS MQTT Client')
 		self._subscribeCount = 0
@@ -86,7 +90,8 @@ class AWSMQTTClient:
 		state_obj = {
 			"state": {
 				"reported": button_obj
-			}
+			},
+			"clientToken": CLIENT_TOKEN
 		}
 
 		self._log.debug('publish to update: ' + json.dumps(state_obj))
@@ -100,7 +105,8 @@ class AWSMQTTClient:
 		state_obj = {
 			"state": {
 				"reported": button_dict
-			}
+			},
+			"clientToken": CLIENT_TOKEN
 		}
 
 		self._client.publish('$aws/things/AWSLightGrid/shadow/update', json.dumps(state_obj))
