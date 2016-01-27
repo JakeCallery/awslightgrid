@@ -54,7 +54,7 @@ var AWSMQTTClient = function ($clientId, $shadowName){
     });
 
     device.on('message', function($topic, $payload){
-        console.log('Message: ', $topic, $payload.toString());
+        console.log('---- Message: ', $topic, $payload.toString());
         var msg_obj = JSON.parse($payload.toString());
 
         switch($topic) {
@@ -114,7 +114,7 @@ var AWSMQTTClient = function ($clientId, $shadowName){
         stateObj.state.desired[objName] = $state;
 
         console.log('Sending Desired Update: ' + JSON.stringify(stateObj));
-        device.publish(UPDATE_TOPIC, stateObj);
+        device.publish(UPDATE_TOPIC, JSON.stringify(stateObj));
     };
 
     this.requestCurrentShadow = function(){
