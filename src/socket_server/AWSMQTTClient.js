@@ -9,6 +9,7 @@ var sleep = require('sleep');
 
 var UPDATE_TOPIC = '$aws/things/AWSLightGrid/shadow/update';
 var UPDATE_ACCEPTED_TOPIC = '$aws/things/AWSLightGrid/shadow/update/accepted';
+var GET_TOPIC = '$aws/things/AWSLightGrid/shadow/get';
 var GET_ACCEPTED_TOPIC = '$aws/things/AWSLightGrid/shadow/get/accepted';
 var UPDATE_REJECTED_TOPIC = '$aws/things/AWSLightGrid/shadow/update/rejected';
 var GET_REJECTED_TOPIC = '$aws/things/AWSLightGrid/shadow/get/rejected';
@@ -54,10 +55,12 @@ var AWSMQTTClient = function ($clientId, $shadowName){
 
     device.on('message', function($topic, $payload){
         console.log('Message: ', $topic, $payload.toString());
+        var msg_obj = JSON.parse($payload.toString());
 
         switch($topic) {
             case UPDATE_ACCEPTED_TOPIC:
                 console.log('Caught Update Accepted');
+                self.emit('updatefrommqtt', msg_obj);
                 break;
 
             case GET_ACCEPTED_TOPIC:
@@ -115,7 +118,7 @@ var AWSMQTTClient = function ($clientId, $shadowName){
     };
 
     this.requestCurrentShadow = function(){
-        //thingShadows.get(shadowName);
+        device.publish(GET_TOPIC,'');
     };
 
 };
