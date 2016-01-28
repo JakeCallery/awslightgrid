@@ -151,10 +151,8 @@ class Adafruit_TrellisSet(object):
 		"""Initialize the Trellis set at the provided I2C addresses and bus numbers.
 		   Each parameter should be a tuple with (I2C address, I2C bus number).
 		"""
-		print "Len: " + str(len(addrs)) + ',' + str(len(self._matrices))
 		assert len(addrs) == len(self._matrices), 'Number of addresses does not match number of Trellis matrices!'
 		for matrix, addr in zip(self._matrices, addrs):
-			print 'before new begin: ' + str(addr[0]) + ',' + str(addr[1])
 			matrix.begin(addr[0], addr[1])
 
 	def setBrightness(self, b):

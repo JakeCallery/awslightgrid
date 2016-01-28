@@ -23,7 +23,7 @@ else:
 LOG_FILE_PATH = LOG_DIR_PATH + "awslightgrid" + "_log.txt"
 
 LOG_NAME = "awslightgrid_logger"
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 ################
 
 first_subscribe = True
@@ -33,6 +33,7 @@ def grab_args():
 	parser = ArgumentParser(prog=__name__)
 	parser.add_argument("--mqtt", dest="mqtt")
 	parser.add_argument("--clog", dest="clog", default='true')
+	parser.add_argument("--startwait", dest="startwait", default=0)
 	return parser.parse_known_args()
 
 
@@ -96,6 +97,8 @@ def handle_device_request_full_shadow(sender):
 if __name__ == "__main__":
 	log = logging.getLogger(LOG_NAME)
 	options, unknown_args = grab_args()
+
+	time.sleep(int(options.startwait))
 
 	if options.clog != 'true':
 		ENABLE_CONSOLE_LOGGING = False

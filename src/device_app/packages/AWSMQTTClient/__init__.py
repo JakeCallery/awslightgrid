@@ -55,6 +55,21 @@ class AWSMQTTClient:
 	def _on_message(self, client, userdata, msg):
 		self._log.debug("-------- Received message from topic: " + msg.topic + " | QoS: " + str(msg.qos) + " | Data Received: " + str(msg.payload))
 
+		#ignore messages I sent
+		try:
+			msgobj = json.loads(msg.payload)
+			self._log.debug(">>>>>: " + str(msgobj))
+			if "clientToken" in msgobj:
+				if msgobj["clientToken"] == CLIENT_TOKEN:
+					self._log.debug('**** Skipping message from me... ****')
+					return
+				else:
+					self._log.debug('**** NOT MY MESSAGE, I WILL DEAL WITH IT *****')
+			else:
+				self._log.debug('******* NO CLIENT TOKEN *******')
+		except Exception, e:
+			pass
+
 		if msg.topic == '$aws/things/AWSLightGrid/shadow/get/accepted':
 			self.getMessageEvent(msg.payload)
 
