@@ -14,7 +14,7 @@ from packages.DeviceManager import DeviceManager
 MOCK_DEVICE = False
 ENABLE_LOGGING = True
 ENABLE_CONSOLE_LOGGING = True
-ENABLE_FILE_LOGGING = False
+ENABLE_FILE_LOGGING = True
 if platform.system().lower() == "linux":
 	LOG_DIR_PATH = "/var/log/awslightgrid/"
 else:
@@ -28,26 +28,11 @@ LOG_LEVEL = logging.DEBUG
 
 first_subscribe = True
 
-log = logging.getLogger(LOG_NAME)
-if ENABLE_CONSOLE_LOGGING:
-	stdout_handler = logging.StreamHandler(sys.stdout)
-	stdout_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
-	stdout_handler.setLevel(LOG_LEVEL)
-	log.addHandler(stdout_handler)
-
-if ENABLE_FILE_LOGGING:
-	file_handler = logging.FileHandler(LOG_FILE_PATH)
-	file_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
-	file_handler.setLevel(LOG_LEVEL)
-	log.addHandler(file_handler)
-
-log.setLevel(LOG_LEVEL)
-log.disabled = not ENABLE_LOGGING
-
 
 def grab_args():
 	parser = ArgumentParser(prog=__name__)
 	parser.add_argument("--mqtt", dest="mqtt")
+	parser.add_argument("--clog", dest="clog", default='true')
 	return parser.parse_known_args()
 
 
@@ -109,8 +94,28 @@ def handle_device_request_full_shadow(sender):
 	mqttClient.request_full_shadow()
 
 if __name__ == "__main__":
-	log.info("Main")
+	log = logging.getLogger(LOG_NAME)
 	options, unknown_args = grab_args()
+
+	if options.clog != 'true':
+		ENABLE_CONSOLE_LOGGING = False
+
+	if ENABLE_CONSOLE_LOGGING:
+		stdout_handler = logging.StreamHandler(sys.stdout)
+		stdout_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+		stdout_handler.setLevel(LOG_LEVEL)
+		log.addHandler(stdout_handler)
+
+	if ENABLE_FILE_LOGGING:
+		file_handler = logging.FileHandler(LOG_FILE_PATH)
+		file_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+		file_handler.setLevel(LOG_LEVEL)
+		log.addHandler(file_handler)
+
+	log.setLevel(LOG_LEVEL)
+	log.disabled = not ENABLE_LOGGING
+
+	log.info("Main")
 
 	global mqttClient
 	global deviceManager
