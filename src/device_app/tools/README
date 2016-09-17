@@ -1,0 +1,2 @@
+on device be sure to start rsync as a daemon:
+sudo rsync --daemon
