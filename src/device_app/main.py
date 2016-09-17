@@ -23,7 +23,7 @@ else:
 LOG_FILE_PATH = LOG_DIR_PATH + "awslightgrid" + "_log.txt"
 
 LOG_NAME = "awslightgrid_logger"
-LOG_LEVEL = logging.INFO
+LOG_LEVEL = logging.DEBUG
 ################
 
 first_subscribe = True
@@ -69,7 +69,12 @@ def handle_mqtt_get_message(sender, payload):
     log.debug("Main Caught Get Message: " + str(payload))
     obj = json.loads(payload)
     log.debug("OBJ: " + str(obj))
-    deviceManager.update_button(obj["state"]["reported"])
+    if "reported" in obj["state"] and len(obj["state"]["reported"]) > 0:
+        log.debug("Setting Reported State")
+        deviceManager.update_button(obj["state"]["reported"])
+    else:
+        log.debug("No Reported State Object")
+
     if "desired" in obj["state"] and len(obj["state"]["desired"]) > 0:
         log.debug("Setting Desired Buttons")
         deviceManager.update_button(obj["state"]["desired"], notify_of_update=False)

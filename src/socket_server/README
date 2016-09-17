@@ -1,0 +1,6 @@
+Launch with:
+nodejs ./main.js --mqtt aws
+
+or
+
+nodejs ./main.js --mqtt jac

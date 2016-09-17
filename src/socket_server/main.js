@@ -1,5 +1,5 @@
 'use strict';
-process.title = "LBSocketServer";
+process.title = "LGSocketServer";
 
 //handle args
 var argv = require('yargs').argv;

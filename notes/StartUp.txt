@@ -1,0 +1,22 @@
+#### socket_server ####
+This is in the vagrant box
+after vagrant box is up or machine is booted Launch With:
+cd /socketserver
+nodejs ./main.js --mqtt aws
+or
+nodejs ./main.js --mqtt jac
+
+#### device_app ####
+This should autostart by running the autostart.sh on boot.
+To start manually:
+Connect to device over serial or ssh/wifi
+python main.py --mqtt=aws --clog=true --startwait=1
+
+#### Web Pages / Web client ####
+Simply static html pages.
+This is used for the web browsers to interact with the device
+
+#### Vagrant / VM #####
+to start the VM:
+vagrant up
+
