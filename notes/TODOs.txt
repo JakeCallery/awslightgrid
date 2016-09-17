@@ -1,4 +1,5 @@
 Next up (Software):
+change message priority to level 3 (client settings?  currently using 0)
 figure why minimist is broken on linux, or just handle it manually
 reconnect on suspend (web clients)
 implement certs/keys for jac mqtt
