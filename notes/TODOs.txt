@@ -1,6 +1,5 @@
 Next up (Software):
-change message priority/QoS to level 3 (client settings?  currently using 0)
-figure why minimist is broken on linux, or just handle it manually
+figure out why minimist is broken on linux, or just handle it manually
 reconnect on suspend (web clients)
 implement certs/keys for jac mqtt
 error messaging on web clients
@@ -42,3 +41,4 @@ Create Standalone Edison Python code
     - notify of state "sync"
 bring down state on connect of device
 DB not being updated when getting message from device
+change message priority/QoS to level 2 / Can't set to 2 not supported by AWS, set to 1
