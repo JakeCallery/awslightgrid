@@ -20,3 +20,7 @@ This is used for the web browsers to interact with the device
 to start the VM:
 vagrant up
 
+#### Sync Files to Edison Device ####
+on device be sure to start rsync as a daemon:
+sudo rsync --daemon
+then run the syncfiles.bat file in the tools directory

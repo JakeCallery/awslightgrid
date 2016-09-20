@@ -2,6 +2,8 @@ import paho.mqtt.client as mqtt
 import json
 from ..utils.events import EventHandler
 
+PUBLISH_QOS = 1
+
 
 class JACMQTTClient:
     def __init__(self, log=None):
@@ -58,8 +60,8 @@ class JACMQTTClient:
             }
         }
 
-        self._client.publish('AWSLightGrid/status', json.dumps(state_obj))
+        self._client.publish('AWSLightGrid/status', json.dumps(state_obj), PUBLISH_QOS)
 
     def request_full_shadow(self):
         self._log.debug('Requesting Full Shadow')
-        self._client.publish('AWSLightGrid/get', 'fullshadow')
+        self._client.publish('AWSLightGrid/get', 'fullshadow', PUBLISH_QOS)

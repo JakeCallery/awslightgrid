@@ -4,7 +4,7 @@ import json
 from ..utils.events import EventHandler
 
 CLIENT_TOKEN = "DeviceAWSMQTTClient"
-
+PUBLISH_QOS = 1
 
 class AWSMQTTClient:
     def __init__(self, log=None):
@@ -112,11 +112,11 @@ class AWSMQTTClient:
         }
 
         self._log.debug('publish to update: ' + json.dumps(state_obj))
-        self._client.publish('$aws/things/AWSLightGrid/shadow/update', json.dumps(state_obj))
+        self._client.publish('$aws/things/AWSLightGrid/shadow/update', json.dumps(state_obj), PUBLISH_QOS)
 
     def request_full_shadow(self):
         self._log.debug('Requesting Full Shadow')
-        self._client.publish('$aws/things/AWSLightGrid/shadow/get', '')
+        self._client.publish('$aws/things/AWSLightGrid/shadow/get', '', PUBLISH_QOS)
 
     def report_button_dict(self, button_dict):
         state_obj = {
@@ -126,4 +126,4 @@ class AWSMQTTClient:
             "clientToken": CLIENT_TOKEN
         }
 
-        self._client.publish('$aws/things/AWSLightGrid/shadow/update', json.dumps(state_obj))
+        self._client.publish('$aws/things/AWSLightGrid/shadow/update', json.dumps(state_obj), PUBLISH_QOS)

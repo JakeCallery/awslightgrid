@@ -7,6 +7,7 @@ var mqtt = require('mqtt');
 var util = require('util');
 var fs = require('fs');
 var sqlite3 = require('sqlite3').verbose();
+var PUBLISH_QOS = 1;
 
 var JACMQTTClient = function($clientId, $shadowName){
     var self = this;
@@ -80,7 +81,7 @@ var JACMQTTClient = function($clientId, $shadowName){
                 self.getFullShadowState(function($stateObj){
                     console.log('Full Shadow Callback');
                     shadowObj.state.desired = $stateObj;
-                    client.publish(shadowName + '/' + 'status', JSON.stringify(shadowObj));
+                    client.publish(shadowName + '/' + 'status', JSON.stringify(shadowObj), PUBLISH_QOS);
                 });
 
                 console.log('before break');
@@ -173,11 +174,11 @@ var JACMQTTClient = function($clientId, $shadowName){
         self.updateDB(col, row, state);
 
         console.log('Publish Desired Update');
-        client.publish(shadowName + '/' + 'status', JSON.stringify(stateObj));
+        client.publish(shadowName + '/' + 'status', JSON.stringify(stateObj), PUBLISH_QOS);
     };
 
     this.requestCurrentShadow = function(){
-        client.publish(shadowName + '/' + 'get', 'fullshadow');
+        client.publish(shadowName + '/' + 'get', 'fullshadow', PUBLISH_QOS);
     };
 
     this.updateDB = function($col, $row, $state){

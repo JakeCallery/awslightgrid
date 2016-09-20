@@ -14,6 +14,7 @@ var GET_ACCEPTED_TOPIC = '$aws/things/AWSLightGrid/shadow/get/accepted';
 var UPDATE_REJECTED_TOPIC = '$aws/things/AWSLightGrid/shadow/update/rejected';
 var GET_REJECTED_TOPIC = '$aws/things/AWSLightGrid/shadow/get/rejected';
 var DELTA_TOPIC = '$aws/things/AWSLightGrid/shadow/update/delta';
+var PUBLISH_QOS = 1;
 
 var AWSMQTTClient = function ($clientId, $shadowName){
 
@@ -114,11 +115,11 @@ var AWSMQTTClient = function ($clientId, $shadowName){
         stateObj.state.desired[objName] = $state;
 
         console.log('Sending Desired Update: ' + JSON.stringify(stateObj));
-        device.publish(UPDATE_TOPIC, JSON.stringify(stateObj));
+        device.publish(UPDATE_TOPIC, JSON.stringify(stateObj), PUBLISH_QOS);
     };
 
     this.requestCurrentShadow = function(){
-        device.publish(GET_TOPIC,'');
+        device.publish(GET_TOPIC,'', PUBLISH_QOS);
     };
 
 };
