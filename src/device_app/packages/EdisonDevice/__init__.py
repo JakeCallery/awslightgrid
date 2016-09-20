@@ -96,7 +96,7 @@ class EdisonDevice:
         return int(col), int(row)
 
     def _handle_button_press(self, button_index, new_state):
-        self._log.debug('handle buton press: ' + str(button_index) + ':' + str(new_state))
+        self._log.debug('handle button press: ' + str(button_index) + ':' + str(new_state))
         col, row = self.get_col_row_from_index(button_index)
         self._log.debug('Col,Row' + str(col) + ',' + str(row))
         prop_str = str(col) + '_' + str(row)

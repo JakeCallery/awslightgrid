@@ -105,7 +105,8 @@ class AWSMQTTClient:
     def button_update_from_hardware(self, button_obj):
         state_obj = {
             "state": {
-                "reported": button_obj
+                "reported": button_obj,
+                "desired": button_obj
             },
             "clientToken": CLIENT_TOKEN
         }
