@@ -49,7 +49,7 @@ class AWSMQTTClient:
 
         self._log.debug('Subscribe Count: ' + str(self._subscribeCount))
 
-        if self._subscribeCount >= 7:
+        if self._subscribeCount >= 6:
             self.subscribedEvent()
         else:
             self._subscribeCount += 1
