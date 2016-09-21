@@ -29,3 +29,6 @@ class DeviceManager:
 
     def update(self):
         self._device.update()
+
+    def run_special(self):
+        self._device.run_special()

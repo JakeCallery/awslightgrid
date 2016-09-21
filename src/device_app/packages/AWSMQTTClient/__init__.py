@@ -15,6 +15,7 @@ class AWSMQTTClient:
         self.getMessageEvent = EventHandler(self)
         self.connectedEvent = EventHandler(self)
         self.subscribedEvent = EventHandler(self)
+        self.specialMessageEvent = EventHandler(self)
 
         self.client_token = CLIENT_TOKEN
 
@@ -41,13 +42,14 @@ class AWSMQTTClient:
         self._client.subscribe('$aws/things/AWSLightGrid/shadow/get/rejected')
         self._client.subscribe('$aws/things/AWSLightGrid/shadow/update/rejected')
         self._client.subscribe('$aws/things/AWSLightGrid/shadow/update/delta')
+        self._client.subscribe('AWSLightGrid/special')
 
     def _on_subscribe(self, client, obj, mid, granted_qos):
         self._log.info("Subscribed: " + str(mid) + " " + str(granted_qos) + "  data:" + str(obj))
 
         self._log.debug('Subscribe Count: ' + str(self._subscribeCount))
 
-        if self._subscribeCount >= 5:
+        if self._subscribeCount >= 7:
             self.subscribedEvent()
         else:
             self._subscribeCount += 1
@@ -81,6 +83,10 @@ class AWSMQTTClient:
         # 		self.statusMessageEvent(msg.payload)
         # 	else:
         # 		self._log.info("State from old version, ignoring...")
+
+        elif msg.topic == 'AWSLightGrid/special':
+            self._log.info("** Caught Special Message **")
+            self.specialMessageEvent(msg.payload)
 
         elif msg.topic == '$aws/things/AWSLightGrid/shadow/update/delta':
             obj = json.loads(msg.payload)

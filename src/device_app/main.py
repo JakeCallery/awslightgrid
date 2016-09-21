@@ -65,6 +65,14 @@ def handle_mqtt_status_message(sender, payload):
         deviceManager.update_button(obj['state']['reported'])
 
 
+def handle_mqtt_special_message(sender, payload):
+    log.debug("Main Caught Special Message: " + str(payload))
+    obj = json.loads(payload)
+    if "clickType" in obj and obj["clickType"] == "DOUBLE":
+        log.debug("Main caught double click")
+        deviceManager.run_special()
+
+
 def handle_mqtt_get_message(sender, payload):
     log.debug("Main Caught Get Message: " + str(payload))
     obj = json.loads(payload)
@@ -140,6 +148,7 @@ if __name__ == "__main__":
     mqttClient.deltaMessageEvent += handle_mqtt_delta_message
     mqttClient.getMessageEvent += handle_mqtt_get_message
     mqttClient.subscribedEvent += handle_mqtt_subscribed
+    mqttClient.specialMessageEvent += handle_mqtt_special_message
 
     # set up hardware
     if MOCK_DEVICE:

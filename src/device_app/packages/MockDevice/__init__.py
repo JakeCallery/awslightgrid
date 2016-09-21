@@ -26,3 +26,7 @@ class MockDevice:
         time.sleep(10)
         self.test_button_press({"0_0": "true"})
         self._log.debug("Sleep End")
+
+    def run_special(self):
+        self._log.debug("Running Special")
+

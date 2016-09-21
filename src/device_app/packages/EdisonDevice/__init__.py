@@ -158,3 +158,16 @@ class EdisonDevice:
             obj[key_string] = self._trellis.isLED(i)
 
         return obj
+
+    def run_special(self):
+        saved_buttons = []
+        for i in range(self._num_buttons):
+            saved_buttons.append(self._trellis.isLED(i))
+
+        self.show_off_display()
+
+        for j in range(self._num_buttons):
+            if saved_buttons[j] == True:
+                self._trellis.setLED(j)
+
+        self._trellis.writeDisplay()

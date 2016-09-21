@@ -7,6 +7,7 @@ var Events = require('events');
 var awsIoT = require('aws-iot-device-sdk');
 var sleep = require('sleep');
 
+var SPECIAL_TOPIC = 'AWSLightGrid/special';
 var UPDATE_TOPIC = '$aws/things/AWSLightGrid/shadow/update';
 var UPDATE_ACCEPTED_TOPIC = '$aws/things/AWSLightGrid/shadow/update/accepted';
 var GET_TOPIC = '$aws/things/AWSLightGrid/shadow/get';
@@ -38,6 +39,7 @@ var AWSMQTTClient = function ($clientId, $shadowName){
         device.subscribe(UPDATE_REJECTED_TOPIC);
         device.subscribe(GET_REJECTED_TOPIC);
         device.subscribe(DELTA_TOPIC);
+        device.subscribe(SPECIAL_TOPIC);
 
         console.log('Subscribe Complete');
     });
@@ -70,6 +72,10 @@ var AWSMQTTClient = function ($clientId, $shadowName){
 
             case DELTA_TOPIC:
                 console.log('Caught Delta Topic');
+                break;
+
+            case SPECIAL_TOPIC:
+                console.log('** SPECIAL TOPIC **');
                 break;
 
             default:
