@@ -21,7 +21,7 @@ button {
 .outerWrapper {
     width: 100%;
     margin: 0;
-    padding: 0;
+    padding: 20px 0 0 0;
 }
 
 .gridDiv {
@@ -75,6 +75,18 @@ button {
 
     .gridDiv{
         width: 440px;
+    }
+}
+
+@media (max-width: 425px){
+    .gridButtonDisplay {
+        width: 30px;
+        height: 30px;
+        margin: 3px;
+    }
+
+    .gridDiv{
+        width: 300px;
     }
 }
 

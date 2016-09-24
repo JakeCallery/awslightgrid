@@ -17,7 +17,7 @@ function(BaseTarget, LogLevel, VerboseLevel, ParsedStackTrace){
 	    /** {Array.<BaseTarget> */ Logger.targetList = [];
 	    /** {Array.<String> */ Logger.tagList = [];
 	    /** {Array.<String> */ Logger.stringFilterList = [];
-		Logger.levelFilter = (LogLevel.INFO | LogLevel.WARNING | LogLevel.ERROR);
+		Logger.levelFilter = (LogLevel.INFO | LogLevel.DEBUG | LogLevel.WARNING | LogLevel.ERROR);
 	    Logger.verboseFilter = (VerboseLevel.NORMAL);
 		Logger.baseTime = new Date().getTime();
 
@@ -28,6 +28,10 @@ function(BaseTarget, LogLevel, VerboseLevel, ParsedStackTrace){
 	    Logger.log = function($args){
 			Logger.output.call(this, LogLevel.INFO, Array.prototype.slice.call(arguments,0));
 	    };
+
+	    Logger.debug = function($args){
+			Logger.output.call(this, LogLevel.DEBUG, Array.prototype.slice.call(arguments,0));
+		};
 
 	    /**
 	     * Log out using the "WARNING" level

@@ -42,7 +42,7 @@ define([
 
             p.handleButtonClick = function($e){
                 var self = this;
-                L.log('Button Clicked: ' + this.col + ',' + this.row);
+                L.debug('Button Clicked: ' + this.col + ',' + this.row);
                 self.toggleState();
             };
 
@@ -52,7 +52,7 @@ define([
 
                 if($state != this.state){
                     this.state = $state;
-                    L.log('' + this.state + ' / ' + this.col, this.row);
+                    L.debug('' + this.state + ' / ' + this.col, this.row);
                     if(this.state == GridButton.ON_STATE){
                         DOMUtils.addClass(self.buttonEl, 'selected');
                         DOMUtils.removeClass(self.buttonEl, 'deSelected');

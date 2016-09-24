@@ -54,7 +54,7 @@ define([
             p.initGrid = function($numCols, $numRows){
                 var self = this;
                 this.buttons = DOMUtils.getChildNodesByClassName(this.gridDivEl, "gridButton");
-                L.log('Num Buttons: ' + this.buttons.length);
+                L.debug('Num Buttons: ' + this.buttons.length);
 
                 for(var r = 0; r < $numRows; r++){
                     this.buttonGrid.push([]);

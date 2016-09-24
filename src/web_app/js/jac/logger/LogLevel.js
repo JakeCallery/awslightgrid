@@ -10,10 +10,11 @@ function(){
         };
 
 	    /** @const */ LogLevel.INFO = 2;
-	    /** @const */ LogLevel.WARNING = 4;
-	    /** @const */ LogLevel.ERROR = 8;
-	    /** @const */ LogLevel.TRACKING = 16;
-		/** @const */ LogLevel.ALL = (LogLevel.INFO | LogLevel.WARNING | LogLevel.ERROR | LogLevel.TRACKING);
+		/** @const */ LogLevel.DEBUG = 4;
+	    /** @const */ LogLevel.WARNING = 8;
+	    /** @const */ LogLevel.ERROR = 16;
+	    /** @const */ LogLevel.TRACKING = 32;
+		/** @const */ LogLevel.ALL = (LogLevel.INFO | LogLevel.DEBUG | LogLevel.WARNING | LogLevel.ERROR | LogLevel.TRACKING);
 
 	    LogLevel.getName = function($filter){
 			var result = '';
@@ -22,6 +23,11 @@ function(){
 			    if(result != ''){result += ',';}
 			    result += 'INFO';
 		    }
+
+			if($filter & LogLevel.DEBUG){
+				if(result != ''){result += ',';}
+				result += 'DEBUG';
+			}
 
 		    if($filter & LogLevel.WARNING){
 			    if(result != ''){result += ',';}
