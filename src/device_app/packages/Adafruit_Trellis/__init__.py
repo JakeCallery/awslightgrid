@@ -44,12 +44,13 @@ buttonLUT = [0x07, 0x04, 0x02, 0x22,
 
 
 class Adafruit_Trellis(object):
-    def __init__(self):
+    def __init__(self, log):
         """Create a Trellis object."""
         self.displaybuffer = [0] * 8
         self._keys = [0] * 6
         self._lastkeys = [0] * 6
         self._i2c = None
+        self._log = log
 
     def begin(self, addr=0x70, bus=-1):
         """Initialize the Trellis at the provided I2C address and bus number."""
@@ -121,10 +122,22 @@ class Adafruit_Trellis(object):
         """Read the state of the buttons from the hardware.
            Returns True if a button is pressed, False otherwise.
         """
+        result = None
         self._check_i2c()
-        self._lastkeys = self._keys
-        self._keys = self._i2c.readList(0x40, 6)
-        return any(map(lambda key, lastkey: key != lastkey, self._keys, self._lastkeys))
+        keep_trying = True
+        try_count = 0
+        while keep_trying and try_count < 100:
+            try:
+                self._lastkeys = self._keys
+                self._keys = self._i2c.readList(0x40, 6)
+                result = any(map(lambda key, lastkey: key != lastkey, self._keys, self._lastkeys))
+                keep_trying = False
+            except Exception as e:
+                self._log.debug("readSwitches crashed: " + str(e))
+                try_count += 1
+                keep_trying = True
+                self._log.debug("tryCount: " + str(try_count))
+        return result
 
     def justPressed(self, k):
         """Return True if the specified key was first pressed in the last readSwitches call."""

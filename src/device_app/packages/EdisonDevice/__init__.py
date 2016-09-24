@@ -16,10 +16,10 @@ class EdisonDevice:
         self._log.debug('Creating New Edison Device')
         self.button_update_event = EventHandler(self)
 
-        self._matrix0 = Adafruit_Trellis()
-        self._matrix1 = Adafruit_Trellis()
-        self._matrix2 = Adafruit_Trellis()
-        self._matrix3 = Adafruit_Trellis()
+        self._matrix0 = Adafruit_Trellis(self._log)
+        self._matrix1 = Adafruit_Trellis(self._log)
+        self._matrix2 = Adafruit_Trellis(self._log)
+        self._matrix3 = Adafruit_Trellis(self._log)
         self._trellis = Adafruit_TrellisSet(self._matrix0, self._matrix1, self._matrix2, self._matrix3)
 
         self._num_buttons = NUMTRELLIS * num_cols * num_rows
