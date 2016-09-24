@@ -112,13 +112,13 @@ class EdisonDevice:
         for i in range(self._num_buttons):
             self._trellis.setLED(i)
             self._trellis.writeDisplay()
-            time.sleep(0.002)
+            time.sleep(0.01)
 
         # then turn them off
         for i in range(self._num_buttons):
             self._trellis.clrLED(i)
             self._trellis.writeDisplay()
-            time.sleep(0.002)
+            time.sleep(0.01)
 
     def update_button(self, button_obj, notify_of_update=True):
         for prop in button_obj:

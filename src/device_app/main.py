@@ -23,7 +23,7 @@ else:
 LOG_FILE_PATH = LOG_DIR_PATH + "awslightgrid" + "_log.txt"
 
 LOG_NAME = "awslightgrid_logger"
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 ################
 
 first_subscribe = True
