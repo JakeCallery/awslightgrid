@@ -120,6 +120,45 @@ class EdisonDevice:
             self._trellis.writeDisplay()
             time.sleep(0.01)
 
+    def show_off_smile(self):
+        # Turn all off first
+        for i in range(self._num_buttons):
+            self._trellis.clrLED(i)
+            self._trellis.writeDisplay()
+            time.sleep(0.01)
+
+        # show smile
+        smile_array = list()
+        smile_array.append(self.get_index_from_col_row(1, 1))
+        smile_array.append(self.get_index_from_col_row(2, 1))
+        smile_array.append(self.get_index_from_col_row(5, 1))
+        smile_array.append(self.get_index_from_col_row(6, 1))
+        smile_array.append(self.get_index_from_col_row(5, 6))
+        smile_array.append(self.get_index_from_col_row(1, 5))
+        smile_array.append(self.get_index_from_col_row(5, 2))
+        smile_array.append(self.get_index_from_col_row(6, 2))
+        smile_array.append(self.get_index_from_col_row(1, 2))
+        smile_array.append(self.get_index_from_col_row(2, 2))
+        smile_array.append(self.get_index_from_col_row(0, 4))
+        smile_array.append(self.get_index_from_col_row(3, 6))
+        smile_array.append(self.get_index_from_col_row(4, 6))
+        smile_array.append(self.get_index_from_col_row(7, 4))
+        smile_array.append(self.get_index_from_col_row(6, 5))
+        smile_array.append(self.get_index_from_col_row(2, 6))
+
+        # self._log.debug('Num Buttons: ' + str(self._num_buttons))
+        for i in range(len(smile_array)):
+            self._trellis.setLED(smile_array[i])
+
+        self._trellis.writeDisplay()
+        time.sleep(2)
+
+        # then turn them off
+        for i in range(self._num_buttons):
+            self._trellis.clrLED(i)
+            self._trellis.writeDisplay()
+            time.sleep(0.01)
+
     def update_button(self, button_obj, notify_of_update=True):
         for prop in button_obj:
             self._log.debug('Updating Hardware Button to: ' + str(prop) + '/' + str(button_obj[prop]))
@@ -164,7 +203,7 @@ class EdisonDevice:
         for i in range(self._num_buttons):
             saved_buttons.append(self._trellis.isLED(i))
 
-        self.show_off_display()
+        self.show_off_smile()
 
         for j in range(self._num_buttons):
             if saved_buttons[j] == True:
