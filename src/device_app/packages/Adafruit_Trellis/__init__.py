@@ -133,10 +133,10 @@ class Adafruit_Trellis(object):
                 result = any(map(lambda key, lastkey: key != lastkey, self._keys, self._lastkeys))
                 keep_trying = False
             except Exception as e:
-                self._log.debug("readSwitches crashed: " + str(e))
+                self._log.info("readSwitches crashed: " + str(e))
                 try_count += 1
                 keep_trying = True
-                self._log.debug("tryCount: " + str(try_count))
+                self._log.info("tryCount: " + str(try_count))
         return result
 
     def justPressed(self, k):
