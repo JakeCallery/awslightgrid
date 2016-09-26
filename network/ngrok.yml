@@ -6,7 +6,9 @@ web_addr: 0.0.0.0:4040
 tunnels:
   webclient:
     proto: http
-    addr: 8080
+    addr: 80
+    bind_tls: false
+    inspect: false
     hostname: awslightgrid.jakecallery.com
 
   socketclient:
