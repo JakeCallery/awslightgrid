@@ -9,6 +9,7 @@ var Client = require('./Client.js');
 var Message = require('./Message.js');
 var util = require('util');
 var SERVER_ID = 0;
+var shadowVersion = 0;
 
 var LGSocketServer = function ($id){
     var self = this;
@@ -40,6 +41,16 @@ var LGSocketServer = function ($id){
     this.updateFromMQTT = function($data){
         console.log('Update From MQTT:');
         //console.log($data);
+        console.log("Version: " + $data.version);
+        if($data.version < shadowVersion){
+            //Skip
+            console.log("*** CAUGHT OLD VERSION ***");
+            console.log("requesting full shadow to all");
+            self.emit('requestcurrentshadow');
+            return;
+        } else {
+            shadowVersion = $data.version;
+        }
 
         //set reported
         for(var reportedBtn in $data.state.reported) {

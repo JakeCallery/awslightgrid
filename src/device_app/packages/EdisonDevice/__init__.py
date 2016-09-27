@@ -62,14 +62,14 @@ class EdisonDevice:
             row_board = 0
 
         index_offset = INDEX_OFFSET_MAP[col_board][row_board]
-        self._log.debug("Offset, colb, rowb" + str(index_offset) + "," + str(col_board) + "," + str(row_board))
+        # self._log.debug("Offset, colb, rowb" + str(index_offset) + "," + str(col_board) + "," + str(row_board))
 
         base_col = col % self._numBoardCols
         base_row = row % self._numBoardRows
 
         index = index_offset + (base_row * self._numBoardCols) + base_col
 
-        self._log.debug("INDEX: " + str(index))
+        # self._log.debug("INDEX: " + str(index))
 
         return int(index)
 
@@ -90,15 +90,15 @@ class EdisonDevice:
         row = math.floor(remainder / self._numBoardCols) + row_add
         col = (remainder % self._numBoardCols) + col_add
 
-        self._log.debug(
-            'Board,Remainder,Col,Row: ' + str(board) + ',' + str(remainder) + ',' + str(col) + ',' + str(row))
+        # self._log.debug(
+        #    'Board,Remainder,Col,Row: ' + str(board) + ',' + str(remainder) + ',' + str(col) + ',' + str(row))
 
         return int(col), int(row)
 
     def _handle_button_press(self, button_index, new_state):
-        self._log.debug('handle button press: ' + str(button_index) + ':' + str(new_state))
+        # self._log.debug('handle button press: ' + str(button_index) + ':' + str(new_state))
         col, row = self.get_col_row_from_index(button_index)
-        self._log.debug('Col,Row' + str(col) + ',' + str(row))
+        # self._log.debug('Col,Row' + str(col) + ',' + str(row))
         prop_str = str(col) + '_' + str(row)
         button_obj = dict()
         button_obj[prop_str] = new_state
@@ -161,30 +161,30 @@ class EdisonDevice:
 
     def update_button(self, button_obj, notify_of_update=True):
         for prop in button_obj:
-            self._log.debug('Updating Hardware Button to: ' + str(prop) + '/' + str(button_obj[prop]))
+            # self._log.debug('Updating Hardware Button to: ' + str(prop) + '/' + str(button_obj[prop]))
             col_row = prop
             state = button_obj[prop]
             coord_list = col_row.encode('ascii', 'ignore').split("_")
             col = int(coord_list[0])
             row = int(coord_list[1])
-            self._log.debug("Switching Button: " + str(col) + "," + str(row) + " to: " + str(state))
+            # self._log.debug("Switching Button: " + str(col) + "," + str(row) + " to: " + str(state))
 
             # handle hardware
             if row < self._numBoardRows * NUMTRELLIS and col < self._numBoardCols * NUMTRELLIS:
                 index = self.get_index_from_col_row(col, row)
-                self._log.debug('Index: ' + str(index))
-                self._log.debug('Updating Hardware Button to: ' + str(prop) + '/' + str(button_obj[prop]))
+                # self._log.debug('Index: ' + str(index))
+                # self._log.debug('Updating Hardware Button to: ' + str(prop) + '/' + str(button_obj[prop]))
                 if state == 'true' or state == 'True' or state is True:
-                    self._log.debug('Setting LED')
+                    # self._log.debug('Setting LED')
                     self._trellis.setLED(index)
 
                 else:
-                    self._log.debug('Clearing LED')
+                    # self._log.debug('Clearing LED')
                     self._trellis.clrLED(index)
 
             else:
                 index = row * self._numBoardCols + col
-                self._log.error('Button index: ' + str(index) + ' out of range!')
+                # self._log.error('Button index: ' + str(index) + ' out of range!')
 
         # Update final display
         self._trellis.writeDisplay()
