@@ -18,7 +18,7 @@ define([
             L.addLogTarget(new ConsoleTarget());
             L.isEnabled = true;
             var client = null;
-            L.levelFilter = (LogLevel.INFO | LogLevel.WARNING | LogLevel.ERROR);
+            L.levelFilter = (LogLevel.DEBUG | LogLevel.INFO | LogLevel.WARNING | LogLevel.ERROR);
             L.debug('New Main!');
 
             var num_cols = 8;

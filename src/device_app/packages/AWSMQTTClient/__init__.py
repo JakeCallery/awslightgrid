@@ -4,7 +4,8 @@ import json
 from ..utils.events import EventHandler
 
 CLIENT_TOKEN = "DeviceAWSMQTTClient"
-PUBLISH_QOS = 1
+PUBLISH_QOS = 0
+SUBSCRIBE_QOS = 0
 
 class AWSMQTTClient:
     def __init__(self, log=None):
@@ -36,13 +37,13 @@ class AWSMQTTClient:
 
     def _on_connect(self, client, object, flags, rc):
         self._log.info("Subscriber Connection status code: " + str(rc) + " | Connection status: successful")
-        self._client.subscribe('$aws/things/AWSLightGrid/shadow/get')
-        self._client.subscribe('$aws/things/AWSLightGrid/shadow/get/accepted')
-        self._client.subscribe('$aws/things/AWSLightGrid/shadow/update/accepted')
-        self._client.subscribe('$aws/things/AWSLightGrid/shadow/get/rejected')
-        self._client.subscribe('$aws/things/AWSLightGrid/shadow/update/rejected')
-        self._client.subscribe('$aws/things/AWSLightGrid/shadow/update/delta')
-        self._client.subscribe('AWSLightGrid/special')
+        self._client.subscribe('$aws/things/AWSLightGrid/shadow/get', SUBSCRIBE_QOS)
+        self._client.subscribe('$aws/things/AWSLightGrid/shadow/get/accepted', SUBSCRIBE_QOS)
+        self._client.subscribe('$aws/things/AWSLightGrid/shadow/update/accepted', SUBSCRIBE_QOS)
+        self._client.subscribe('$aws/things/AWSLightGrid/shadow/get/rejected', SUBSCRIBE_QOS)
+        self._client.subscribe('$aws/things/AWSLightGrid/shadow/update/rejected', SUBSCRIBE_QOS)
+        self._client.subscribe('$aws/things/AWSLightGrid/shadow/update/delta', SUBSCRIBE_QOS)
+        self._client.subscribe('AWSLightGrid/special', 1)
 
     def _on_subscribe(self, client, obj, mid, granted_qos):
         self._log.info("Subscribed: " + str(mid) + " " + str(granted_qos) + "  data:" + str(obj))
@@ -96,6 +97,9 @@ class AWSMQTTClient:
                 self.deltaMessageEvent(msg.payload)
             else:
                 self._log.info("Delta from old version, ignoring...")
+                # Request full shadow to get everyone back in sync
+                self.request_full_shadow()
+
         else:
             self._log.debug('Unhandled message topic: ' + msg.topic + '. Ignoring...')
             self._log.debug('Ignored message: ' + str(msg.payload))

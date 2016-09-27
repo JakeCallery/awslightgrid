@@ -15,7 +15,8 @@ var GET_ACCEPTED_TOPIC = '$aws/things/AWSLightGrid/shadow/get/accepted';
 var UPDATE_REJECTED_TOPIC = '$aws/things/AWSLightGrid/shadow/update/rejected';
 var GET_REJECTED_TOPIC = '$aws/things/AWSLightGrid/shadow/get/rejected';
 var DELTA_TOPIC = '$aws/things/AWSLightGrid/shadow/update/delta';
-var PUBLISH_QOS = 1;
+var PUBLISH_QOS = 0;
+var SUBSCRIBE_QOS = 0;
 
 var AWSMQTTClient = function ($clientId, $shadowName){
 
@@ -34,12 +35,12 @@ var AWSMQTTClient = function ($clientId, $shadowName){
     device.on('connect', function(){
         console.log('MQTT Connected');
         console.log('Subscribing...');
-        device.subscribe(UPDATE_ACCEPTED_TOPIC);
-        device.subscribe(GET_ACCEPTED_TOPIC);
-        device.subscribe(UPDATE_REJECTED_TOPIC);
-        device.subscribe(GET_REJECTED_TOPIC);
-        device.subscribe(DELTA_TOPIC);
-        device.subscribe(SPECIAL_TOPIC);
+        device.subscribe(UPDATE_ACCEPTED_TOPIC, SUBSCRIBE_QOS);
+        device.subscribe(GET_ACCEPTED_TOPIC, SUBSCRIBE_QOS);
+        device.subscribe(UPDATE_REJECTED_TOPIC, SUBSCRIBE_QOS);
+        device.subscribe(GET_REJECTED_TOPIC, SUBSCRIBE_QOS);
+        device.subscribe(DELTA_TOPIC, SUBSCRIBE_QOS);
+        device.subscribe(SPECIAL_TOPIC, SUBSCRIBE_QOS);
 
         console.log('Subscribe Complete');
     });
