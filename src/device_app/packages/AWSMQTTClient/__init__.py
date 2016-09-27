@@ -96,7 +96,7 @@ class AWSMQTTClient:
                 self._currentVersion = int(obj["version"])
                 self.deltaMessageEvent(msg.payload)
             else:
-                self._log.info("Delta from old version, ignoring...")
+                self._log.info("** Delta from old version, requesting full shadow...")
                 # Request full shadow to get everyone back in sync
                 self.request_full_shadow()
 
