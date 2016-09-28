@@ -16,7 +16,7 @@ define([
     function (doc, L, ConsoleTarget, JSON, SocketClient, LGManager, DOMUtils, LogLevel) {
         return function(){
             L.addLogTarget(new ConsoleTarget());
-            L.isEnabled = true;
+            L.isEnabled = false;
             var client = null;
             L.levelFilter = (LogLevel.DEBUG | LogLevel.INFO | LogLevel.WARNING | LogLevel.ERROR);
             L.debug('New Main!');

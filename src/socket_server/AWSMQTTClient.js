@@ -58,17 +58,18 @@ var AWSMQTTClient = function ($clientId, $shadowName){
     });
 
     device.on('message', function($topic, $payload){
-        console.log('---- Message: ', $topic, $payload.toString());
+        //console.log('---- Message: ', $topic, $payload.toString());
         var msg_obj = JSON.parse($payload.toString());
 
         switch($topic) {
             case UPDATE_ACCEPTED_TOPIC:
-                console.log('Caught Update Accepted');
+                //console.log('Caught Update Accepted');
                 self.emit('updatefrommqtt', msg_obj);
                 break;
 
             case GET_ACCEPTED_TOPIC:
                 console.log('Caught Get Accepted');
+                self.emit('updatefrommqtt', msg_obj);
                 break;
 
             case DELTA_TOPIC:
