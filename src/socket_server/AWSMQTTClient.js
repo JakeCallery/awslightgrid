@@ -63,7 +63,7 @@ var AWSMQTTClient = function ($clientId, $shadowName){
 
         switch($topic) {
             case UPDATE_ACCEPTED_TOPIC:
-                //console.log('Caught Update Accepted');
+                console.log('Caught Update Accepted');
                 self.emit('updatefrommqtt', msg_obj);
                 break;
 

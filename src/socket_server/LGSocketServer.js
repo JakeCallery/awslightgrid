@@ -39,8 +39,8 @@ var LGSocketServer = function ($id){
     };
 
     this.updateFromMQTT = function($data){
-        //console.log('Update From MQTT:');
-        //console.log($data);
+        console.log('Update From MQTT:');
+        console.log($data);
         console.log("Version: " + $data.version);
         if($data.version < shadowVersion){
             //Skip
@@ -139,7 +139,7 @@ var LGSocketServer = function ($id){
     };
 
     var handleClientMessage = function($client, $msg){
-        //console.log('ClientMessage: ' + $client.id + ' / ' + $msg.messageType + ' / ' + $msg.data);
+        console.log('ClientMessage: ' + $client.id + ' / ' + $msg.messageType + ' / ' + $msg.data);
         //console.log($msg.data);
 
         if($msg.messageType === 'btnupd'){
